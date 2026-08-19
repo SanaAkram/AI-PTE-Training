@@ -37,3 +37,22 @@ create table if not exists dictionary (
   created_at timestamptz not null default now()
 );
 create index if not exists dictionary_difficulty_idx on dictionary (difficulty);
+
+-- Grammar & sentence-building points — a rule/pattern explained in Urdu with
+-- example sentences, paired with one quick fill-in-the-blank check. Built by
+-- scripts/build-grammar.ts, same generation approach as dictionary/question_bank.
+create table if not exists grammar_points (
+  id uuid primary key default gen_random_uuid(),
+  title_en text not null,
+  title_ur text not null,
+  explanation_ur text not null,       -- how/when to use this pattern, in Urdu
+  pattern_en text not null,           -- e.g. "subject + am/is/are + verb-ing"
+  examples jsonb not null,            -- [{en, ur}, ...]
+  practice_sentence text not null,    -- uses {{blank}} once
+  practice_options text[] not null,   -- includes the correct answer
+  practice_answer text not null,
+  category text not null,             -- tenses / articles / prepositions / word-order / agreement / etc.
+  difficulty smallint not null check (difficulty between 1 and 5),
+  created_at timestamptz not null default now()
+);
+create index if not exists grammar_points_difficulty_idx on grammar_points (difficulty);

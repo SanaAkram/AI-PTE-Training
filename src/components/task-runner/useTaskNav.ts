@@ -26,5 +26,11 @@ export function useTaskNav() {
     }
   }
 
-  return { goNext };
+  /** Leaves the exercise entirely, no attempt recorded — same destination
+   * Skip/Next eventually reach, just immediately. */
+  function goBack() {
+    router.push(returnTo);
+  }
+
+  return { goNext, goBack };
 }

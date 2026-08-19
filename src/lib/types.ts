@@ -218,6 +218,21 @@ export interface ProfileRow {
   created_at: string;
 }
 
+export interface GrammarPointRow {
+  id: string;
+  title_en: string;
+  title_ur: string;
+  explanation_ur: string;
+  pattern_en: string;
+  examples: { en: string; ur: string }[];
+  practice_sentence: string; // contains {{blank}} once
+  practice_options: string[];
+  practice_answer: string;
+  category: string;
+  difficulty: 1 | 2 | 3 | 4 | 5;
+  created_at: string;
+}
+
 export interface DictionaryRow {
   id: string;
   english: string;

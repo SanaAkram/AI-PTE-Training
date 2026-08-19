@@ -43,7 +43,7 @@ export function TaskRunner({
   const [grading, setGrading] = useState(false);
   const [score, setScore] = useState<ScoreBreakdown | null>(null);
   const payload = question.payload as Record<string, unknown>;
-  const { goNext } = useTaskNav();
+  const { goNext, goBack } = useTaskNav();
 
   async function handleSubmit(response: ResponsePayload) {
     setGrading(true);
@@ -58,19 +58,25 @@ export function TaskRunner({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-start justify-between gap-3">
-        <div>
+        <button
+          onClick={goBack}
+          className="shrink-0 text-xs font-bold text-ink-soft border border-line rounded-full px-3 py-1.5 mt-0.5"
+        >
+          ⬅ <span className="opacity-70">واپس (Back)</span>
+        </button>
+        <div className="text-right">
           <Bilingual ur={config.labelUr} en={config.labelEn.toUpperCase()} />
           <PteTag>{config.pteNote}</PteTag>
         </div>
-        {!grading && !score && (
-          <button
-            onClick={() => goNext(question.task_type as TaskType)}
-            className="shrink-0 text-xs font-bold text-ink-soft border border-line rounded-full px-3 py-1.5 mt-0.5"
-          >
-            چھوڑیں <span className="opacity-70">(Skip)</span> ⏭
-          </button>
-        )}
       </div>
+      {!grading && !score && (
+        <button
+          onClick={() => goNext(question.task_type as TaskType)}
+          className="self-end -mt-2 shrink-0 text-xs font-bold text-ink-soft border border-line rounded-full px-3 py-1.5"
+        >
+          چھوڑیں <span className="opacity-70">(Skip)</span> ⏭
+        </button>
+      )}
 
       {grading && (
         <div className="text-center py-16">

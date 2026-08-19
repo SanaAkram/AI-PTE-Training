@@ -2,10 +2,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { SECTION_LABELS, TASK_TYPES } from "@/lib/taskTypes";
-import type { QuestionRow, TaskType } from "@/lib/types";
+import { SECTION_LABELS, TASK_TYPES, taskTypesBySection } from "@/lib/taskTypes";
+import { getLearnerDifficulty, pickRandomQuestionId } from "@/lib/questionPicker";
+import type { QuestionRow, Section, TaskType } from "@/lib/types";
 import { TopBar } from "@/components/TopBar";
 import { Bilingual, Card } from "@/components/ui";
+
+const SECTIONS: Section[] = ["speaking", "writing", "reading", "listening"];
 
 export default async function TodayPage() {
   const session = await getSession();
@@ -45,6 +48,28 @@ export default async function TodayPage() {
 
   const queue = tasks.map((t) => t.id).join(",");
   const doneCount = tasks.filter((t) => doneIds.has(t.id)).length;
+  const allDone = tasks.length > 0 && doneCount === tasks.length;
+
+  // Finished everything assigned for today? Don't dead-end — pull a fresh
+  // bonus set (one per section, at the learner's level) so there's always
+  // something new to do without waiting for tomorrow.
+  let bonusTasks: QuestionRow[] = [];
+  if (allDone) {
+    const level = await getLearnerDifficulty(session.profileId);
+    const bonusIds: string[] = [];
+    for (const section of SECTIONS) {
+      const types = taskTypesBySection(section);
+      const type = types[Math.floor(Math.random() * types.length)].type;
+      const id = await pickRandomQuestionId(type, level);
+      if (id) bonusIds.push(id);
+    }
+    if (bonusIds.length) {
+      const { data: bonusRows } = await db.from("question_bank").select("*").in("id", bonusIds);
+      const byId = new Map((bonusRows ?? []).map((q) => [q.id, q as QuestionRow]));
+      bonusTasks = bonusIds.map((id) => byId.get(id)).filter(Boolean) as QuestionRow[];
+    }
+  }
+  const bonusQueue = bonusTasks.map((t) => t.id).join(",");
 
   return (
     <>
@@ -67,38 +92,72 @@ export default async function TodayPage() {
           </Card>
         )}
 
-        <div className="flex flex-col gap-3">
-          {tasks.map((t, i) => {
-            const config = TASK_TYPES[t.task_type as TaskType];
-            const done = doneIds.has(t.id);
-            return (
-              <Link
-                key={t.id}
-                href={`/practice/task/${t.id}?queue=${queue}&pos=${i}&returnTo=${encodeURIComponent("/today")}`}
-              >
-                <Card className="!p-4 flex items-center gap-3">
-                  <span className="text-2xl">{done ? "✅" : SECTION_LABELS[config.section].icon}</span>
-                  <div className="flex-1 text-right">
-                    <div className="ur text-sm">{config.labelUr}</div>
-                    <div className="en text-xs font-bold text-ink-soft">{config.labelEn}</div>
-                  </div>
-                </Card>
-              </Link>
-            );
-          })}
-        </div>
+        {!allDone && (
+          <div className="flex flex-col gap-3">
+            {tasks.map((t, i) => {
+              const config = TASK_TYPES[t.task_type as TaskType];
+              const done = doneIds.has(t.id);
+              return (
+                <Link
+                  key={t.id}
+                  href={`/practice/task/${t.id}?queue=${queue}&pos=${i}&returnTo=${encodeURIComponent("/today")}`}
+                >
+                  <Card className="!p-4 flex items-center gap-3">
+                    <span className="text-2xl">{done ? "✅" : SECTION_LABELS[config.section].icon}</span>
+                    <div className="flex-1 text-right">
+                      <div className="ur text-sm">{config.labelUr}</div>
+                      <div className="en text-xs font-bold text-ink-soft">{config.labelEn}</div>
+                    </div>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        )}
 
-        <div className="grid grid-cols-2 gap-3 mt-2">
+        {allDone && (
+          <div className="flex flex-col gap-3">
+            <Card className="!p-4 text-center bg-teal-soft border-teal">
+              <div className="text-2xl mb-1">🎉</div>
+              <Bilingual center ur="آج کا ہدف مکمل! کیا آپ مزید مشق کرنا چاہتے ہیں؟" en="TODAY'S GOAL DONE! WANT TO KEEP GOING?" />
+            </Card>
+            {bonusTasks.map((t, i) => {
+              const config = TASK_TYPES[t.task_type as TaskType];
+              return (
+                <Link
+                  key={t.id}
+                  href={`/practice/task/${t.id}?queue=${bonusQueue}&pos=${i}&returnTo=${encodeURIComponent("/today")}`}
+                >
+                  <Card className="!p-4 flex items-center gap-3">
+                    <span className="text-2xl">{SECTION_LABELS[config.section].icon}</span>
+                    <div className="flex-1 text-right">
+                      <div className="ur text-sm">{config.labelUr}</div>
+                      <div className="en text-xs font-bold text-ink-soft">{config.labelEn}</div>
+                    </div>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+
+        <div className="grid grid-cols-3 gap-2 mt-2">
           <Link href="/practice">
-            <Card className="!p-4 text-center">
-              <div className="text-2xl mb-1">🎯</div>
-              <Bilingual center ur="مہارت کی مشق" en="PRACTICE BY SKILL" />
+            <Card className="!p-3 text-center">
+              <div className="text-xl mb-1">🎯</div>
+              <Bilingual center ur="مہارت کی مشق" en="PRACTICE" />
+            </Card>
+          </Link>
+          <Link href="/my-words">
+            <Card className="!p-3 text-center">
+              <div className="text-xl mb-1">📚</div>
+              <Bilingual center ur="میرے الفاظ" en="MY WORDS" />
             </Card>
           </Link>
           <Link href="/mock-test">
-            <Card className="!p-4 text-center">
-              <div className="text-2xl mb-1">⏱️</div>
-              <Bilingual center ur="مکمل موک ٹیسٹ" en="FULL MOCK TEST" />
+            <Card className="!p-3 text-center">
+              <div className="text-xl mb-1">⏱️</div>
+              <Bilingual center ur="موک ٹیسٹ" en="MOCK TEST" />
             </Card>
           </Link>
         </div>

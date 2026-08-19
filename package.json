@@ -11,7 +11,8 @@
     "grow": "tsx scripts/daily-grow.ts",
     "add-profile": "tsx scripts/add-profile.ts",
     "set-level": "tsx scripts/set-level.ts",
-    "build-dictionary": "tsx scripts/build-dictionary.ts"
+    "build-dictionary": "tsx scripts/build-dictionary.ts",
+    "build-grammar": "tsx scripts/build-grammar.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.3",
