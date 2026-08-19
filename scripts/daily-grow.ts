@@ -87,7 +87,7 @@ const SCHEMA_HINT: Record<string, string> = {
   respond_to_situation: `{"situationText": string (a workplace/social scenario), "sampleResponse": string}`,
   summarize_group_discussion: `{"lines": [{"speaker": string, "text": string}] (3 speakers), "keyPoints": string (1-2 sentence summary of the discussion)}`,
   summarize_written_text: `{"passage": string (60-100 words, academic/general topic)}`,
-  essay_writing: `{"prompt": string (a discuss-both-views or agree/disagree essay prompt)}`,
+  essay_writing: `{"prompt": string (a 200-300-word-response essay prompt)}`,
   reading_mcq_single: `{"passage": string (40-80 words), "question": string, "options": string[4], "correctIndex": number}`,
   reading_mcq_multiple: `{"passage": string (40-80 words), "question": string, "options": string[4], "correctIndices": number[] (2-3 correct)}`,
   reorder_paragraphs: `{"paragraphsInOrder": string[4] (in correct logical order; app shuffles for the learner)}`,
@@ -103,21 +103,32 @@ const SCHEMA_HINT: Record<string, string> = {
   write_from_dictation: `{"audioText": string (6-10 words, a clear simple sentence)}`,
 };
 
-async function generateForType(openai: OpenAI, taskType: string, difficulty: number) {
+async function generateForType(
+  openai: OpenAI,
+  taskType: string,
+  difficulty: number,
+  count: number,
+  topics: string[]
+) {
+  const topicLine =
+    taskType === "essay_writing"
+      ? `Cover these topics, one per item, in this order — and use a different one of these essay structures for each: ${ESSAY_STRUCTURES.join(", ")}.\nTopics: ${topics.join("; ")}`
+      : `Cover these topics, one per item, in this order (don't repeat a topic within this batch): ${topics.join("; ")}`;
+
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
       {
         role: "system",
         content: `You write practice questions for a PTE (Pearson Test of English) training app, in the exact
-real exam format for the given task type. Register: general/academic topics (education, work,
-health, environment, technology, society) — never a specific professional domain. Output STRICT
-JSON only: {"items": [<one object per item, matching the given shape exactly>]}. No markdown, no
-commentary. Every item must be self-contained and factually coherent.`,
+real exam format for the given task type. Register: general/academic topics only — never a
+specific professional domain. Output STRICT JSON only: {"items": [<one object per item, matching
+the given shape exactly>]}. No markdown, no commentary. Every item must be self-contained and
+factually coherent.`,
       },
       {
         role: "user",
-        content: `Task type: ${taskType}\nShape: ${SCHEMA_HINT[taskType]}\nDifficulty: ${difficulty}/5 (1=simple short sentences, 5=real exam length/complexity)\nGenerate exactly ${ITEMS_PER_TYPE} items.`,
+        content: `Task type: ${taskType}\nShape: ${SCHEMA_HINT[taskType]}\nDifficulty: ${difficulty}/5 (1=simple short sentences, 5=real exam length/complexity)\nGenerate exactly ${count} items.\n${topicLine}`,
       },
     ],
     response_format: { type: "json_object" },
@@ -159,30 +170,50 @@ async function main() {
   const db = createClient(url, key);
   const openai = new OpenAI({ apiKey: openaiKey });
 
+  // Spread each type's items across easy/medium/hard so the bank grows with
+  // real level coverage, not just at one random difficulty.
+  const BANDS = [
+    { min: 1, max: 2 },
+    { min: 3, max: 3 },
+    { min: 4, max: 5 },
+  ];
+
   const newIds: string[] = [];
   for (const taskType of Object.keys(TASK_TYPE_SECTION)) {
-    const difficulty = 1 + Math.floor(Math.random() * 5);
-    const items = await generateForType(openai, taskType, difficulty);
-    if (items.length === 0) continue;
+    const perBand = chunk(
+      Array.from({ length: ITEMS_PER_TYPE }, (_, i) => i),
+      Math.ceil(ITEMS_PER_TYPE / BANDS.length)
+    );
 
-    const { data, error } = await db
-      .from("question_bank")
-      .insert(
-        items.map((payload) => ({
-          section: TASK_TYPE_SECTION[taskType],
-          task_type: taskType,
-          payload,
-          difficulty,
-          source: "daily_gen",
-        }))
-      )
-      .select("id");
-    if (error) {
-      console.warn(`Insert failed for ${taskType}:`, error.message);
-      continue;
+    for (let b = 0; b < BANDS.length && b < perBand.length; b++) {
+      const count = perBand[b].length;
+      if (count === 0) continue;
+      const band = BANDS[b];
+      const difficulty = band.min + Math.floor(Math.random() * (band.max - band.min + 1));
+      const topics = shuffle(TOPIC_POOL).slice(0, count);
+
+      const items = await generateForType(openai, taskType, difficulty, count, topics);
+      if (items.length === 0) continue;
+
+      const { data, error } = await db
+        .from("question_bank")
+        .insert(
+          items.map((payload) => ({
+            section: TASK_TYPE_SECTION[taskType],
+            task_type: taskType,
+            payload,
+            difficulty,
+            source: "daily_gen",
+          }))
+        )
+        .select("id");
+      if (error) {
+        console.warn(`Insert failed for ${taskType} (difficulty ${difficulty}):`, error.message);
+        continue;
+      }
+      newIds.push(...(data ?? []).map((r) => r.id));
+      console.log(`+ ${data?.length ?? 0} ${taskType} (difficulty ${difficulty})`);
     }
-    newIds.push(...(data ?? []).map((r) => r.id));
-    console.log(`+ ${data?.length ?? 0} ${taskType} (difficulty ${difficulty})`);
   }
   console.log(`\nInserted ${newIds.length} new questions.`);
 
