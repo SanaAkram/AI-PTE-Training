@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { GrammarPointRow } from "@/lib/types";
 import { Bilingual, Button, Card } from "@/components/ui";
 import { ReplayButton } from "@/components/task-runner/ReplayButton";
@@ -24,6 +24,14 @@ export default function GrammarClient({ points }: { points: GrammarPointRow[] })
     setIdx((i) => i + 1);
     setAnswered(null);
   }
+
+  // Auto-advance a beat after answering — no extra tap needed for MCQ-style checks.
+  useEffect(() => {
+    if (answered === null) return;
+    const t = setTimeout(next, 1600);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answered]);
 
   const isCorrect = answered === point.practice_answer;
   const [before, after] = point.practice_sentence.split("{{blank}}");

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { DictionaryRow, PersonalVocabRow } from "@/lib/types";
 import { lookupWordAction, saveWordAction, deleteWordAction, checkSentenceAction } from "./actions";
@@ -368,6 +368,14 @@ function MeaningGame({ words, onExit }: { words: VocabItem[]; onExit: () => void
     setIdx((i) => i + 1);
     setAnswered(null);
   }
+
+  // Auto-advance a beat after answering — no extra tap needed for MCQ-style checks.
+  useEffect(() => {
+    if (answered === null) return;
+    const t = setTimeout(next, 1400);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answered]);
 
   return (
     <div>

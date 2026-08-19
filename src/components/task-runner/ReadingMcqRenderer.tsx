@@ -22,7 +22,8 @@ export function ReadingMcqRenderer({
     if (multiSelect) {
       setSelected((s) => (s.includes(i) ? s.filter((x) => x !== i) : [...s, i]));
     } else {
-      setSelected([i]);
+      // Single-answer: submit immediately, no separate tap needed.
+      onSubmit({ kind: "choice", indices: [i] });
     }
   }
 
@@ -49,15 +50,17 @@ export function ReadingMcqRenderer({
       </div>
       <Bilingual
         center
-        ur={multiSelect ? "تمام درست جواب چنیں" : "ایک درست جواب چنیں"}
-        en={multiSelect ? "SELECT ALL THAT APPLY" : "SELECT ONE ANSWER"}
+        ur={multiSelect ? "تمام درست جواب چنیں" : "جواب پر دبائیں"}
+        en={multiSelect ? "SELECT ALL THAT APPLY" : "TAP YOUR ANSWER"}
       />
-      <Button
-        disabled={selected.length === 0}
-        onClick={() => onSubmit({ kind: "choice", indices: selected })}
-      >
-        جمع کرائیں <span className="opacity-80 text-sm">(Submit)</span>
-      </Button>
+      {multiSelect && (
+        <Button
+          disabled={selected.length === 0}
+          onClick={() => onSubmit({ kind: "choice", indices: selected })}
+        >
+          جمع کرائیں <span className="opacity-80 text-sm">(Submit)</span>
+        </Button>
+      )}
     </div>
   );
 }
