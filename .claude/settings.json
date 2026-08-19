@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx --yes create-next-app@latest --help)"
+      "Bash(npx --yes create-next-app@latest --help)",
+      "PowerShell(npx --yes create-next-app@latest --help 2>&1)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\New Aamir Laptop\\AppData\\Local\\npm-cache\\_npx"
     ]
   }
 }

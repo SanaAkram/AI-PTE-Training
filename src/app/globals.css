@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f7f2e7;
+  --surface: #ffffff;
+  --surface-alt: #fbefd9;
+  --ink: #2b2013;
+  --ink-soft: #6b5d45;
+  --accent: #de8b2a;
+  --accent-deep: #b5651d;
+  --accent-ink: #3a2200;
+  --teal: #2f6f62;
+  --teal-soft: #dcede8;
+  --rose: #c43d4f;
+  --rose-soft: #f6dee1;
+  --line: #e7d9be;
+  --locked: #c9beA8;
+  --shadow: 0 6px 20px rgba(43, 32, 19, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1710;
+    --surface: #262019;
+    --surface-alt: #322a1c;
+    --ink: #f3ecdd;
+    --ink-soft: #c9bba0;
+    --accent: #f0a93e;
+    --accent-deep: #ffc46b;
+    --accent-ink: #2a1a05;
+    --teal: #59b39f;
+    --teal-soft: #1e3934;
+    --rose: #e8697a;
+    --rose-soft: #3d2228;
+    --line: #3a3226;
+    --locked: #4a4232;
+    --shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-accent: var(--accent);
+  --color-accent-deep: var(--accent-deep);
+  --color-teal: var(--teal);
+  --color-teal-soft: var(--teal-soft);
+  --color-rose: var(--rose);
+  --color-rose-soft: var(--rose-soft);
+  --color-line: var(--line);
+  --color-locked: var(--locked);
+  --font-display: var(--font-baloo), "Segoe UI", sans-serif;
+  --font-body: var(--font-nunito), "Segoe UI", sans-serif;
+  --font-urdu: var(--font-nastaliq), "Jameel Noori Nastaleeq", serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+}
+.ur {
+  font-family: var(--font-urdu);
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+.en {
+  font-family: var(--font-body);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
