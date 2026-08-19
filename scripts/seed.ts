@@ -41,28 +41,45 @@ function chunk<T>(arr: T[], size: number): T[][] {
 
 async function main() {
   const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // Newer Supabase projects call this "Secret key" (SUPABASE_SECRET_KEY);
+  // older ones call it "service_role" — accept either.
+  const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) {
-    console.error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.local — see .env.example.");
+    console.error(
+      "Missing SUPABASE_URL or SUPABASE_SECRET_KEY (or SUPABASE_SERVICE_ROLE_KEY) in .env.local — see .env.example."
+    );
     process.exit(1);
   }
   const db = createClient(url, key);
 
   // ---- profiles ---------------------------------------------------------
-  const { data: existingProfiles } = await db.from("profiles").select("id, name, role");
+  const { data: existingProfiles, error: profilesSelectError } = await db
+    .from("profiles")
+    .select("id, name, role");
+  if (profilesSelectError) {
+    console.error("Could not read the profiles table — is supabase/schema.sql set up? Details:");
+    console.error(profilesSelectError);
+    process.exit(1);
+  }
   const hasMubeen = existingProfiles?.some((p) => p.role === "learner");
   const hasSana = existingProfiles?.some((p) => p.role === "observer");
 
   if (!hasMubeen) {
     const pin = process.env.SEED_MUBEEN_PIN ?? "1234";
-    await db.from("profiles").insert({ name: "Mubeen", role: "learner", pin_hash: await hashPin(pin) });
+    const { error } = await db
+      .from("profiles")
+      .insert({ name: "Mubeen", role: "learner", pin_hash: await hashPin(pin) });
+    if (error) throw error;
     console.log(`Created profile: Mubeen (learner), PIN ${pin}`);
   } else {
     console.log("Profile Mubeen already exists — skipping.");
   }
   if (!hasSana) {
     const pin = process.env.SEED_SANA_PIN ?? "5678";
-    await db.from("profiles").insert({ name: "Sana", role: "observer", pin_hash: await hashPin(pin) });
+    const { error } = await db
+      .from("profiles")
+      .insert({ name: "Sana", role: "observer", pin_hash: await hashPin(pin) });
+    if (error) throw error;
     console.log(`Created profile: Sana (observer), PIN ${pin}`);
   } else {
     console.log("Profile Sana already exists — skipping.");
