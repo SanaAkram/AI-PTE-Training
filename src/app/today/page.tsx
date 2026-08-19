@@ -141,7 +141,7 @@ export default async function TodayPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-2 mt-2">
+        <div className="grid grid-cols-2 gap-2 mt-2">
           <Link href="/practice">
             <Card className="!p-3 text-center">
               <div className="text-xl mb-1">🎯</div>
@@ -152,6 +152,12 @@ export default async function TodayPage() {
             <Card className="!p-3 text-center">
               <div className="text-xl mb-1">📚</div>
               <Bilingual center ur="میرے الفاظ" en="MY WORDS" />
+            </Card>
+          </Link>
+          <Link href="/grammar">
+            <Card className="!p-3 text-center">
+              <div className="text-xl mb-1">✏️</div>
+              <Bilingual center ur="گرامر" en="GRAMMAR" />
             </Card>
           </Link>
           <Link href="/mock-test">

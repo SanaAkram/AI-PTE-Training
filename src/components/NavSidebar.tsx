@@ -15,6 +15,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/practice", ur: "مشق", en: "Practice", icon: "🎯" },
   { href: "/mock-test", ur: "موک ٹیسٹ", en: "Mock Test", icon: "⏱️" },
   { href: "/my-words", ur: "میرے الفاظ", en: "My Words", icon: "📚" },
+  { href: "/grammar", ur: "گرامر", en: "Grammar", icon: "✏️" },
   { href: "/dashboard", ur: "پیش رفت", en: "Progress", icon: "📊" },
 ];
 
