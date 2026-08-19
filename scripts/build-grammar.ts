@@ -46,7 +46,9 @@ interface GrammarItem {
   pattern_en: string;
   examples: { en: string; ur: string }[];
   practice_sentence: string;
+  practice_sentence_ur: string;
   practice_options: string[];
+  practice_options_ur: string[];
   practice_answer: string;
 }
 
@@ -66,7 +68,10 @@ produce distinct grammar points. Output STRICT JSON only:
   "pattern_en": string (the structural pattern, e.g. "subject + am/is/are + verb-ing"),
   "examples": [{"en": string, "ur": string}] (exactly 2 example sentence pairs),
   "practice_sentence": string (one sentence with exactly one blank written as {{blank}}, testing this point),
+  "practice_sentence_ur": string (Urdu translation of that full sentence, so the learner understands the context, not just the grammar choice),
   "practice_options": string[4] (four choices for the blank, including the correct one, plausible distractors),
+  "practice_options_ur": string[4] (a short Urdu gloss for EACH option in practice_options, same order — so a
+    beginner can see what each choice actually means, not just guess the pattern),
   "practice_answer": string (must exactly match one of practice_options)
 }]}
 No markdown, no commentary. Difficulty 1 = very basic, common patterns; 5 = more nuanced usage.
@@ -116,7 +121,9 @@ async function main() {
         (it) =>
           it.title_en &&
           it.practice_options?.includes(it.practice_answer) &&
+          it.practice_options_ur?.length === it.practice_options?.length &&
           it.practice_sentence?.includes("{{blank}}") &&
+          it.practice_sentence_ur &&
           !seenTitles.has(it.title_en.toLowerCase())
       );
       fresh.forEach((it) => seenTitles.add(it.title_en.toLowerCase()));

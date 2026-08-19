@@ -49,10 +49,21 @@ create table if not exists grammar_points (
   pattern_en text not null,           -- e.g. "subject + am/is/are + verb-ing"
   examples jsonb not null,            -- [{en, ur}, ...]
   practice_sentence text not null,    -- uses {{blank}} once
+  practice_sentence_ur text not null, -- Urdu translation of the full sentence
   practice_options text[] not null,   -- includes the correct answer
+  practice_options_ur text[] not null, -- Urdu meaning of each option, same order
   practice_answer text not null,
   category text not null,             -- tenses / articles / prepositions / word-order / agreement / etc.
   difficulty smallint not null check (difficulty between 1 and 5),
   created_at timestamptz not null default now()
 );
 create index if not exists grammar_points_difficulty_idx on grammar_points (difficulty);
+
+-- If grammar_points already existed from an earlier partial run, add the
+-- newer Urdu columns (per-option glosses + the practice sentence itself) and
+-- clear out the incomplete rows that predate them — they'll be regenerated.
+alter table grammar_points add column if not exists practice_options_ur text[];
+alter table grammar_points add column if not exists practice_sentence_ur text;
+delete from grammar_points where practice_options_ur is null or practice_sentence_ur is null;
+alter table grammar_points alter column practice_options_ur set not null;
+alter table grammar_points alter column practice_sentence_ur set not null;

@@ -226,7 +226,9 @@ export interface GrammarPointRow {
   pattern_en: string;
   examples: { en: string; ur: string }[];
   practice_sentence: string; // contains {{blank}} once
+  practice_sentence_ur: string;
   practice_options: string[];
+  practice_options_ur: string[]; // Urdu meaning of each option, same order
   practice_answer: string;
   category: string;
   difficulty: 1 | 2 | 3 | 4 | 5;

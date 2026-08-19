@@ -68,6 +68,7 @@ export default function GrammarClient({ points }: { points: GrammarPointRow[] })
           </span>
           {after}
         </p>
+        <p className="ur text-sm text-ink-soft text-center">{point.practice_sentence_ur}</p>
         <div className="flex flex-col gap-2">
           {point.practice_options.map((opt, i) => {
             const show = answered !== null;
@@ -77,7 +78,7 @@ export default function GrammarClient({ points }: { points: GrammarPointRow[] })
                 key={i}
                 disabled={show}
                 onClick={() => setAnswered(opt)}
-                className={`en rounded-2xl border-2 px-4 py-3 text-center ${
+                className={`rounded-2xl border-2 px-4 py-3 text-center ${
                   show && optCorrect
                     ? "border-teal bg-teal-soft"
                     : show && opt === answered
@@ -85,7 +86,10 @@ export default function GrammarClient({ points }: { points: GrammarPointRow[] })
                       : "border-line bg-surface"
                 }`}
               >
-                {opt}
+                <div className="en">{opt}</div>
+                {point.practice_options_ur?.[i] && (
+                  <div className="ur text-sm text-ink-soft mt-0.5">{point.practice_options_ur[i]}</div>
+                )}
               </button>
             );
           })}
