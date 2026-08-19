@@ -165,7 +165,9 @@ export default async function DashboardPage({
         {rows.length === 0 && (
           <Card>
             <p className="text-sm text-ink-soft text-center">
-              {isObserver ? "No attempts yet." : "ابھی کوئی مشق نہیں ہوئی — آج کی مشق شروع کریں!"}
+              {isObserver
+                ? "ابھی کوئی مشق نہیں ہوئی۔ / No attempts yet."
+                : "ابھی کوئی مشق نہیں ہوئی — آج کی مشق شروع کریں!"}
             </p>
           </Card>
         )}

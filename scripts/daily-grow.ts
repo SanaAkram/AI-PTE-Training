@@ -15,9 +15,42 @@ loadEnv({ path: ".env.local" });
 import { createClient } from "@supabase/supabase-js";
 import OpenAI from "openai";
 
-const ITEMS_PER_TYPE = 2;
+function arg(name: string): string | undefined {
+  const i = process.argv.indexOf(`--${name}`);
+  return i !== -1 ? process.argv[i + 1] : undefined;
+}
+
+// Default (2/type/day ≈ 44/day) is what the daily automated routine should
+// use — small and cheap, forever. Pass --count for a one-off bulk top-up,
+// e.g. `npm run grow -- --count 9` for ~198 new questions in one run.
+const ITEMS_PER_TYPE = Number(arg("count") ?? 2);
 const DAYS_TO_EXTEND = 7;
 const TASKS_PER_DAY = 4;
+
+// Real PTE topic categories (Education, Technology & Society, Government/Law/
+// Policy, Media & Advertising, Health & Lifestyle recur most) plus the 4
+// standard essay structures — grounded in actual PTE prep research, given to
+// the model so a multi-item batch spreads across topics instead of repeating.
+const TOPIC_POOL = [
+  "education",
+  "technology and society",
+  "health and lifestyle",
+  "environment and climate",
+  "government and public policy",
+  "media and advertising",
+  "work and career",
+  "travel and transportation",
+  "science and research",
+  "society and culture",
+  "money and the economy",
+  "sports and recreation",
+];
+const ESSAY_STRUCTURES = [
+  "agree or disagree",
+  "advantages and disadvantages",
+  "problem and solution",
+  "discuss both views and give your opinion",
+];
 
 const TASK_TYPE_SECTION: Record<string, string> = {
   read_aloud: "speaking",

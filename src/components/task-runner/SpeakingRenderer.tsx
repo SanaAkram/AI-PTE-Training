@@ -14,8 +14,30 @@ import type {
 } from "@/lib/types";
 import { useCountdown, formatSeconds } from "@/lib/hooks/useCountdown";
 import { speakOnce, speakSequence, useSpeechRecognition } from "@/lib/hooks/useSpeech";
+import { useAudioRate } from "@/lib/hooks/useAudioRate";
 import { Bilingual, Button } from "@/components/ui";
 import { SimpleChart } from "./SimpleChart";
+import { ReplayButton } from "./ReplayButton";
+
+/** The literal text/lines to replay for audio-first speaking tasks, or null
+ * for tasks with no spoken prompt (Read Aloud, Describe Image, Respond to a
+ * Situation just show text/an image — nothing was played aloud to replay). */
+function audioReplayFor(taskType: SpeakingTaskType, payload: unknown): { text?: string; lines?: string[] } | null {
+  switch (taskType) {
+    case "repeat_sentence":
+      return { text: (payload as RepeatSentencePayload).audioText };
+    case "retell_lecture":
+      return { text: (payload as RetellLecturePayload).audioText };
+    case "answer_short_question":
+      return { text: (payload as AnswerShortQuestionPayload).audioText };
+    case "summarize_group_discussion": {
+      const p = payload as SummarizeGroupDiscussionPayload;
+      return { lines: p.lines.map((l) => `${l.speaker} says: ${l.text}`) };
+    }
+    default:
+      return null;
+  }
+}
 
 const AUDIO_FIRST: SpeakingTaskType[] = [
   "repeat_sentence",
@@ -61,6 +83,8 @@ export function SpeakingRenderer({
     audioFirst ? "listen" : config.prepSeconds ? "prep" : "record"
   );
   const { start, stop, listening, supported } = useSpeechRecognition();
+  const { rate } = useAudioRate();
+  const replay = audioReplayFor(taskType, payload);
   const recordStartRef = useRef(0);
   const finishedRef = useRef(false);
   const lastTranscriptRef = useRef("");
@@ -97,15 +121,10 @@ export function SpeakingRenderer({
     if (phase !== "listen") return;
     let cancelled = false;
     async function play() {
-      if (taskType === "summarize_group_discussion") {
-        const p = payload as SummarizeGroupDiscussionPayload;
-        await speakSequence(p.lines.map((l) => `${l.speaker} says: ${l.text}`));
-      } else if (taskType === "repeat_sentence") {
-        await speakOnce((payload as RepeatSentencePayload).audioText);
-      } else if (taskType === "retell_lecture") {
-        await speakOnce((payload as RetellLecturePayload).audioText);
-      } else if (taskType === "answer_short_question") {
-        await speakOnce((payload as AnswerShortQuestionPayload).audioText);
+      if (replay?.lines) {
+        await speakSequence(replay.lines, rate);
+      } else if (replay?.text) {
+        await speakOnce(replay.text, rate);
       }
       if (!cancelled) setPhase(config.prepSeconds ? "prep" : "record");
     }
@@ -150,6 +169,12 @@ export function SpeakingRenderer({
       {(phase === "prep" || phase === "record") && (
         <div className="bg-surface-alt rounded-2xl p-5">
           <Prompt taskType={taskType} payload={payload} />
+          {replay && (
+            <div className="flex items-center justify-center gap-2 mt-4">
+              <ReplayButton text={replay.text} lines={replay.lines} size="sm" />
+              <Bilingual center ur="دوبارہ سنیں" en="LISTEN AGAIN" />
+            </div>
+          )}
         </div>
       )}
 
