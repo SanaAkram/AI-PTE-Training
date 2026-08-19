@@ -2,13 +2,22 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { PersonalVocabRow } from "@/lib/types";
+import type { DictionaryRow, PersonalVocabRow } from "@/lib/types";
 import { lookupWordAction, saveWordAction, deleteWordAction, checkSentenceAction } from "./actions";
 import type { VocabLookupResult } from "@/lib/vocabLookup";
 import { Bilingual, Button, Card } from "@/components/ui";
 import { ReplayButton } from "@/components/task-runner/ReplayButton";
 
 type Mode = "add" | "practice" | "saved";
+
+/** The common shape the practice games actually need — both saved personal
+ * words and shared dictionary words satisfy this, so practice can draw from
+ * either pool interchangeably. */
+interface VocabItem {
+  id: string;
+  english: string;
+  meaning_ur: string;
+}
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -19,8 +28,17 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-export default function MyWordsClient({ words }: { words: PersonalVocabRow[] }) {
-  const [mode, setMode] = useState<Mode>(words.length === 0 ? "add" : "practice");
+export default function MyWordsClient({
+  words,
+  dictionaryWords,
+}: {
+  words: PersonalVocabRow[];
+  dictionaryWords: DictionaryRow[];
+}) {
+  const [mode, setMode] = useState<Mode>("practice");
+  // Practice draws from both pools — your own saved words plus the shared
+  // dictionary — so there's always something to practice, even on day one.
+  const practicePool: VocabItem[] = useMemo(() => [...words, ...dictionaryWords], [words, dictionaryWords]);
 
   return (
     <div className="flex flex-col gap-5">
@@ -46,7 +64,7 @@ export default function MyWordsClient({ words }: { words: PersonalVocabRow[] }) 
       </div>
 
       {mode === "add" && <AddWordPanel onSaved={() => setMode("saved")} />}
-      {mode === "practice" && <PracticePanel words={words} />}
+      {mode === "practice" && <PracticePanel words={practicePool} />}
       {mode === "saved" && <SavedList words={words} />}
     </div>
   );
@@ -170,7 +188,7 @@ function SavedList({ words }: { words: PersonalVocabRow[] }) {
 
 type PracticeMode = "spell" | "meaning" | "sentence";
 
-function PracticePanel({ words }: { words: PersonalVocabRow[] }) {
+function PracticePanel({ words }: { words: VocabItem[] }) {
   const [sub, setSub] = useState<PracticeMode | null>(null);
 
   if (words.length === 0) {
@@ -219,15 +237,20 @@ function PracticePanel({ words }: { words: PersonalVocabRow[] }) {
   );
 }
 
-function BackToModes({ onExit }: { onExit: () => void }) {
+function GameHeader({ onExit, onSkip }: { onExit: () => void; onSkip: () => void }) {
   return (
-    <button onClick={onExit} className="text-xs text-ink-soft mb-3 block">
-      ⬅ مشقوں کی فہرست
-    </button>
+    <div className="flex items-center justify-between mb-3">
+      <button onClick={onExit} className="text-xs text-ink-soft">
+        ⬅ مشقوں کی فہرست
+      </button>
+      <button onClick={onSkip} className="text-xs font-bold text-ink-soft border border-line rounded-full px-3 py-1.5">
+        چھوڑیں <span className="opacity-70">(Skip)</span> ⏭
+      </button>
+    </div>
   );
 }
 
-function SpellGame({ words, onExit }: { words: PersonalVocabRow[]; onExit: () => void }) {
+function SpellGame({ words, onExit }: { words: VocabItem[]; onExit: () => void }) {
   const [pool] = useState(() => shuffle(words));
   const [idx, setIdx] = useState(0);
   const [typed, setTyped] = useState("");
@@ -245,7 +268,7 @@ function SpellGame({ words, onExit }: { words: PersonalVocabRow[]; onExit: () =>
 
   return (
     <div>
-      <BackToModes onExit={onExit} />
+      <GameHeader onExit={onExit} onSkip={next} />
       <div className="flex flex-col gap-4 items-center">
         <Bilingual center ur="سنیں اور صحیح ہجے لکھیں" en="LISTEN AND TYPE THE SPELLING" />
         <ReplayButton text={word.english} size="lg" />
@@ -278,7 +301,7 @@ function SpellGame({ words, onExit }: { words: PersonalVocabRow[]; onExit: () =>
   );
 }
 
-function MeaningGame({ words, onExit }: { words: PersonalVocabRow[]; onExit: () => void }) {
+function MeaningGame({ words, onExit }: { words: VocabItem[]; onExit: () => void }) {
   const [pool] = useState(() => shuffle(words));
   const [idx, setIdx] = useState(0);
   const [answered, setAnswered] = useState<number | null>(null);
@@ -298,7 +321,7 @@ function MeaningGame({ words, onExit }: { words: PersonalVocabRow[]; onExit: () 
 
   return (
     <div>
-      <BackToModes onExit={onExit} />
+      <GameHeader onExit={onExit} onSkip={next} />
       <div className="flex flex-col gap-4">
         <Bilingual center ur="اس لفظ کا صحیح معنی چنیں" en="CHOOSE THE CORRECT MEANING" />
         <div className="bg-surface-alt rounded-2xl p-5 text-center flex items-center justify-center gap-3">
@@ -337,7 +360,7 @@ function MeaningGame({ words, onExit }: { words: PersonalVocabRow[]; onExit: () 
   );
 }
 
-function SentenceGame({ words, onExit }: { words: PersonalVocabRow[]; onExit: () => void }) {
+function SentenceGame({ words, onExit }: { words: VocabItem[]; onExit: () => void }) {
   const [pool] = useState(() => shuffle(words));
   const [idx, setIdx] = useState(0);
   const [sentence, setSentence] = useState("");
@@ -362,7 +385,7 @@ function SentenceGame({ words, onExit }: { words: PersonalVocabRow[]; onExit: ()
 
   return (
     <div>
-      <BackToModes onExit={onExit} />
+      <GameHeader onExit={onExit} onSkip={next} />
       <div className="flex flex-col gap-4">
         <Bilingual center ur="اس لفظ کو استعمال کر کے اپنا جملہ بنائیں" en="WRITE YOUR OWN SENTENCE USING THIS WORD" />
         <div className="bg-surface-alt rounded-2xl p-5 text-center flex items-center justify-center gap-3">

@@ -15,6 +15,7 @@ import { HighlightIncorrectWordsRenderer } from "./HighlightIncorrectWordsRender
 import { DictationRenderer } from "./DictationRenderer";
 import { AudioGate } from "./AudioGate";
 import { ScoreCard } from "./ScoreCard";
+import { useTaskNav } from "./useTaskNav";
 import type {
   EssayWritingPayload,
   HighlightCorrectSummaryPayload,
@@ -42,6 +43,7 @@ export function TaskRunner({
   const [grading, setGrading] = useState(false);
   const [score, setScore] = useState<ScoreBreakdown | null>(null);
   const payload = question.payload as Record<string, unknown>;
+  const { goNext } = useTaskNav();
 
   async function handleSubmit(response: ResponsePayload) {
     setGrading(true);
@@ -55,9 +57,19 @@ export function TaskRunner({
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <Bilingual ur={config.labelUr} en={config.labelEn.toUpperCase()} />
-        <PteTag>{config.pteNote}</PteTag>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <Bilingual ur={config.labelUr} en={config.labelEn.toUpperCase()} />
+          <PteTag>{config.pteNote}</PteTag>
+        </div>
+        {!grading && !score && (
+          <button
+            onClick={() => goNext(question.task_type as TaskType)}
+            className="shrink-0 text-xs font-bold text-ink-soft border border-line rounded-full px-3 py-1.5 mt-0.5"
+          >
+            چھوڑیں <span className="opacity-70">(Skip)</span> ⏭
+          </button>
+        )}
       </div>
 
       {grading && (

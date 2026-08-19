@@ -1,28 +1,10 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
 import type { ScoreBreakdown, TaskType } from "@/lib/types";
 import { Button, Card } from "@/components/ui";
+import { useTaskNav } from "./useTaskNav";
 
 export function ScoreCard({ score, taskType }: { score: ScoreBreakdown; taskType: TaskType }) {
-  const router = useRouter();
-  const params = useSearchParams();
-  const queue = (params.get("queue") ?? "").split(",").filter(Boolean);
-  const pos = Number(params.get("pos") ?? "0");
-  const returnTo = params.get("returnTo") ?? "/today";
-
-  function goNext() {
-    if (queue.length && pos + 1 < queue.length) {
-      const nextId = queue[pos + 1];
-      router.push(
-        `/practice/task/${nextId}?queue=${queue.join(",")}&pos=${pos + 1}&returnTo=${encodeURIComponent(returnTo)}`
-      );
-    } else if (queue.length) {
-      router.push(returnTo);
-    } else {
-      router.push(`/practice/${taskType}`);
-    }
-  }
-
+  const { goNext } = useTaskNav();
   const isAi = score.kind === "ai";
   const pct = isAi ? Math.round(score.overall) : score.correct ? 100 : 0;
   const good = isAi ? score.overall >= 65 : score.correct;
@@ -70,7 +52,7 @@ export function ScoreCard({ score, taskType }: { score: ScoreBreakdown; taskType
         )
       )}
 
-      <Button variant="teal" onClick={goNext}>
+      <Button variant="teal" onClick={() => goNext(taskType)}>
         اگلا ➡️ <span className="opacity-80 text-sm">(Next)</span>
       </Button>
     </Card>

@@ -218,6 +218,17 @@ export interface ProfileRow {
   created_at: string;
 }
 
+export interface DictionaryRow {
+  id: string;
+  english: string;
+  meaning_ur: string;
+  example_en: string;
+  example_ur: string;
+  category: string;
+  difficulty: 1 | 2 | 3 | 4 | 5;
+  created_at: string;
+}
+
 export interface PersonalVocabRow {
   id: string;
   profile_id: string;

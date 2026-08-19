@@ -21,3 +21,19 @@ create table if not exists personal_vocab (
   created_at timestamptz not null default now()
 );
 create index if not exists personal_vocab_profile_idx on personal_vocab (profile_id, created_at desc);
+
+-- Shared "Dictionary" — a curated, pre-loaded word bank (not tied to any one
+-- profile) so vocabulary/spelling practice has ready-made content from day
+-- one, without anyone having to type words in first. Built by
+-- scripts/build-dictionary.ts, same approach as question_bank's daily-grow.
+create table if not exists dictionary (
+  id uuid primary key default gen_random_uuid(),
+  english text not null unique,
+  meaning_ur text not null,
+  example_en text not null,
+  example_ur text not null,
+  category text not null,
+  difficulty smallint not null check (difficulty between 1 and 5),
+  created_at timestamptz not null default now()
+);
+create index if not exists dictionary_difficulty_idx on dictionary (difficulty);
