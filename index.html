@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>انگریزی سفر · Angrezi Safar</title>
+<meta name="description" content="PTE ki taraf English seekhne ka aasan raasta — Reading, Writing aur Bolna ki mashq.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧭</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito+Sans:wght@400;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#F7F2E7; --surface:#FFFFFF; --surface-alt:#FBEFD9;
+  --ink:#2B2013; --ink-soft:#6B5D45;
+  --accent:#DE8B2A; --accent-deep:#B5651D; --accent-ink:#3A2200;
+  --teal:#2F6F62; --teal-soft:#DCEDE8;
+  --rose:#C43D4F; --rose-soft:#F6DEE1;
+  --line:#E7D9BE; --locked:#C9BEA8;
+  --shadow: 0 6px 20px rgba(43,32,19,0.10);
+  --font-display:'Baloo 2','Segoe UI',sans-serif;
+  --font-body:'Nunito Sans','Segoe UI',sans-serif;
+  --font-urdu:'Noto Nastaliq Urdu','Jameel Noori Nastaleeq',serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1B1710; --surface:#262019; --surface-alt:#322A1C;
+    --ink:#F3ECDD; --ink-soft:#C9BBA0;
+    --accent:#F0A93E; --accent-deep:#FFC46B; --accent-ink:#2A1A05;
+    --teal:#59B39F; --teal-soft:#1E3934;
+    --rose:#E8697A; --rose-soft:#3D2228;
+    --line:#3A3226; --locked:#4A4232;
+    --shadow: 0 6px 20px rgba(0,0,0,0.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1B1710; --surface:#262019; --surface-alt:#322A1C;
+  --ink:#F3ECDD; --ink-soft:#C9BBA0;
+  --accent:#F0A93E; --accent-deep:#FFC46B; --accent-ink:#2A1A05;
+  --teal:#59B39F; --teal-soft:#1E3934;
+  --rose:#E8697A; --rose-soft:#3D2228;
+  --line:#3A3226; --locked:#4A4232;
+  --shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--font-body);
+  min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+#app{max-width:560px;margin:0 auto;padding:0 0 40px;min-height:100vh;position:relative;}
+h1,h2,h3{font-family:var(--font-display); margin:0; text-wrap:balance;}
+.ur{font-family:var(--font-urdu); direction:rtl; unicode-bidi:isolate;}
+.en{font-family:var(--font-body); direction:ltr; unicode-bidi:isolate;}
+.bilingual{display:flex; flex-direction:column; gap:.2em;}
+.bilingual .ur{font-size:1.2em; line-height:2;}
+.bilingual .en{font-size:.72em; color:var(--ink-soft); font-weight:600; letter-spacing:.02em;}
+button{font-family:inherit; cursor:pointer;}
+button:focus-visible, input:focus-visible, [tabindex]:focus-visible{outline:3px solid var(--accent); outline-offset:2px;}
+input[type=text]{font-family:var(--font-body); font-size:1.05rem;}
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.01ms !important; transition-duration:.01ms !important;} }
+
+/* ---- top bar ---- */
+.topbar{
+  position:sticky; top:0; z-index:5; background:var(--bg);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 18px; border-bottom:1px solid var(--line);
+}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand-mark{font-size:1.6rem;}
+.brand-text h1{font-size:1.15rem; color:var(--ink);}
+.brand-text .en{font-size:.68rem; color:var(--ink-soft); font-weight:700; letter-spacing:.04em;}
+.stars-pill{
+  display:flex; align-items:center; gap:6px; background:var(--surface-alt);
+  border:1px solid var(--line); border-radius:999px; padding:6px 12px;
+  font-family:var(--font-display); font-weight:700; color:var(--accent-deep);
+  font-variant-numeric:tabular-nums;
+}
+.audio-toggle{
+  display:flex; align-items:center; gap:6px; background:none; border:1px solid var(--line);
+  border-radius:999px; padding:6px 10px; color:var(--ink-soft); font-size:.78rem; font-weight:700;
+}
+.audio-toggle.on{border-color:var(--accent); color:var(--accent-deep); background:var(--surface-alt);}
+.header-row{display:flex; gap:8px; align-items:center;}
+
+/* ---- generic layout ---- */
+.screen{padding:20px 18px 8px;}
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:20px;
+  padding:20px; box-shadow:var(--shadow);
+}
+.stack{display:flex; flex-direction:column; gap:14px;}
+.btn{
+  border-radius:16px; padding:16px 20px; border:none; font-family:var(--font-display);
+  font-weight:700; font-size:1.05rem; display:flex; align-items:center; justify-content:center;
+  gap:8px; width:100%; transition:transform .1s ease, filter .15s ease;
+}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--accent); color:var(--accent-ink);}
+.btn-primary:hover{filter:brightness(1.06);}
+.btn-secondary{background:var(--surface-alt); color:var(--ink); border:1.5px solid var(--line);}
+.btn-teal{background:var(--teal); color:#fff;}
+.btn-ghost{background:none; color:var(--ink-soft); border:1.5px solid var(--line);}
+.btn:disabled{opacity:.45; cursor:not-allowed;}
+.btn-row{display:flex; gap:10px;}
+.btn-row .btn{width:auto; flex:1;}
+
+/* ---- welcome ---- */
+.welcome{padding:40px 22px; text-align:center;}
+.welcome .compass{font-size:3.2rem; margin-bottom:6px;}
+.welcome h2.ur{font-size:1.7rem; margin-bottom:2px;}
+.welcome p.en{color:var(--ink-soft); font-weight:700; font-size:.8rem; margin-bottom:26px;}
+.name-input{
+  width:100%; padding:16px; border-radius:14px; border:1.5px solid var(--line);
+  background:var(--surface); color:var(--ink); margin-bottom:14px; text-align:center; font-size:1.1rem;
+}
+
+/* ---- home / stage cards ---- */
+.hero{padding:22px 18px 4px;}
+.hero .ur{font-size:1.35rem;}
+.hero .en{color:var(--ink-soft); font-weight:700; font-size:.8rem;}
+.stage-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:22px; padding:18px;
+  display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow); text-align:right;
+}
+.stage-top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+.stage-icon{
+  font-size:1.8rem; width:52px; height:52px; border-radius:16px; background:var(--surface-alt);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.stage-title{flex:1;}
+.stage-title .ur{font-size:1.15rem;}
+.stage-title .en{font-size:.7rem; color:var(--ink-soft); font-weight:700;}
+.dots{display:flex; gap:6px; direction:ltr;}
+.dot{width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:.7rem; font-weight:800; font-family:var(--font-display); border:2px solid var(--line); color:var(--ink-soft);}
+.dot.passed{background:var(--teal); border-color:var(--teal); color:#fff;}
+.dot.current{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+.dot.locked{background:var(--locked); border-color:var(--locked); color:var(--surface);}
+
+/* ---- stage path ---- */
+.trail{position:relative; padding-left:34px; direction:ltr;}
+.trail::before{content:""; position:absolute; left:15px; top:6px; bottom:6px; width:3px;
+  background:repeating-linear-gradient(var(--line),var(--line) 6px, transparent 6px, transparent 12px);}
+.node{position:relative; margin-bottom:14px;}
+.node-badge{
+  position:absolute; left:-34px; top:8px; width:32px; height:32px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800;
+  font-size:.85rem; border:3px solid var(--bg); z-index:1;
+}
+.node-badge.passed{background:var(--teal); color:#fff;}
+.node-badge.current{background:var(--accent); color:var(--accent-ink);}
+.node-badge.locked{background:var(--locked); color:var(--surface);}
+.node-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:14px 16px;
+  display:flex; align-items:center; justify-content:space-between; gap:10px; text-align:right;
+}
+.node-card.locked{opacity:.55;}
+.node-card .lvl-title .ur{font-size:1.02rem;}
+.node-card .lvl-title .en{font-size:.68rem; color:var(--ink-soft); font-weight:700;}
+.node-arrow{font-size:1.2rem; color:var(--ink-soft);}
+
+/* ---- vocab list ---- */
+.vocab-item{
+  display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line);
+  border-radius:16px; padding:14px; text-align:right;
+}
+.vocab-word{flex:1;}
+.vocab-word .en{font-family:var(--font-display); font-size:1.15rem; color:var(--ink); font-weight:700; direction:ltr; text-align:right;}
+.vocab-word .ur{font-size:1.15rem; color:var(--accent-deep); margin-top:2px;}
+.vocab-word .ex{font-size:.78rem; color:var(--ink-soft); margin-top:6px; direction:ltr; text-align:right;}
+.vocab-word .ex-ur{font-size:.82rem; color:var(--ink-soft); margin-top:2px;}
+.listen-btn{
+  flex-shrink:0; width:46px; height:46px; border-radius:50%; background:var(--surface-alt);
+  border:1.5px solid var(--line); font-size:1.2rem; display:flex; align-items:center; justify-content:center;
+}
+.listen-btn:active{background:var(--accent); }
+
+/* ---- exercise ---- */
+.progress-bar{height:8px; background:var(--surface-alt); border-radius:999px; overflow:hidden; margin-bottom:18px;}
+.progress-bar-fill{height:100%; background:var(--accent); border-radius:999px; transition:width .3s ease;}
+.q-instruction{text-align:right; margin-bottom:16px;}
+.q-instruction .ur{font-size:1.15rem;}
+.q-instruction .en{font-size:.72rem; color:var(--ink-soft); font-weight:700;}
+.q-prompt{
+  background:var(--surface-alt); border-radius:16px; padding:20px; text-align:center; margin-bottom:18px;
+  font-family:var(--font-display); font-size:1.35rem; color:var(--ink); direction:ltr;
+}
+.q-prompt .ur-sub{display:block; font-family:var(--font-urdu); direction:rtl; font-size:.95rem; color:var(--ink-soft); margin-top:8px;}
+.q-prompt .blank{color:var(--accent-deep); letter-spacing:2px;}
+.emoji-prompt{font-size:3.4rem; text-align:center; margin-bottom:10px;}
+.options{display:flex; flex-direction:column; gap:10px;}
+.option-btn{
+  background:var(--surface); border:2px solid var(--line); border-radius:14px; padding:15px 16px;
+  text-align:right; font-size:1.05rem; color:var(--ink); direction:rtl;
+}
+.option-btn .en-tag{display:block; direction:ltr; text-align:right; font-size:.72rem; color:var(--ink-soft); font-weight:700; margin-top:2px;}
+.option-btn.correct{border-color:var(--teal); background:var(--teal-soft);}
+.option-btn.wrong{border-color:var(--rose); background:var(--rose-soft);}
+.option-btn:disabled{cursor:default;}
+.chips{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:14px; direction:ltr;}
+.chip{
+  background:var(--surface-alt); border:1.5px solid var(--line); border-radius:12px; padding:10px 16px;
+  font-family:var(--font-display); font-weight:700; font-size:1rem; direction:ltr;
+}
+.chip:disabled{opacity:.35;}
+.answer-strip{
+  min-height:52px; border:2px dashed var(--line); border-radius:14px; padding:10px; display:flex;
+  flex-wrap:wrap; gap:8px; margin-bottom:14px; align-items:center; justify-content:center; direction:ltr;
+}
+.answer-strip .chip{background:var(--surface); border-color:var(--accent);}
+.mic-wrap{text-align:center; padding:10px 0 4px;}
+.mic-btn{
+  width:96px; height:96px; border-radius:50%; background:var(--accent); border:none; font-size:2.2rem;
+  color:var(--accent-ink); box-shadow:var(--shadow); display:inline-flex; align-items:center; justify-content:center;
+}
+.mic-btn.listening{background:var(--rose); animation:pulse 1s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(196,61,79,.4);}70%{box-shadow:0 0 0 18px rgba(196,61,79,0);}100%{box-shadow:0 0 0 0 rgba(196,61,79,0);}}
+.mic-caption{margin-top:10px; font-weight:700; color:var(--ink-soft); font-size:.85rem;}
+.transcript-box{margin-top:14px; background:var(--surface-alt); border-radius:12px; padding:12px; text-align:center; direction:ltr; font-size:.95rem; color:var(--ink-soft);}
+.feedback-flash{border-radius:14px; padding:12px 14px; margin-top:14px; text-align:right; font-weight:700; display:flex; align-items:center; gap:8px; justify-content:flex-end;}
+.feedback-flash.good{background:var(--teal-soft); color:var(--teal);}
+.feedback-flash.bad{background:var(--rose-soft); color:var(--rose);}
+.self-report{display:flex; gap:10px; margin-top:14px;}
+.helper-words{text-align:center; margin-bottom:12px; color:var(--ink-soft); font-size:.85rem; direction:ltr;}
+
+/* ---- result ---- */
+.result-wrap{text-align:center; padding:10px 4px;}
+.score-ring{
+  width:150px; height:150px; border-radius:50%; margin:6px auto 18px; display:flex; align-items:center;
+  justify-content:center; background:conic-gradient(var(--ring-color,var(--teal)) calc(var(--pct,0)*1%), var(--line) 0);
+}
+.score-ring-inner{
+  width:118px; height:118px; border-radius:50%; background:var(--surface); display:flex; flex-direction:column;
+  align-items:center; justify-content:center; font-family:var(--font-display);
+}
+.score-ring-inner .num{font-size:1.8rem; font-weight:800; font-variant-numeric:tabular-nums;}
+.score-ring-inner .of{font-size:.7rem; color:var(--ink-soft); font-weight:700;}
+.result-title.ur{font-size:1.5rem; margin-bottom:2px;}
+.result-title.en{color:var(--ink-soft); font-weight:700; font-size:.8rem; margin-bottom:22px;}
+.review-list{text-align:right; margin:18px 0;}
+.review-head{font-weight:700; margin-bottom:10px; color:var(--rose);}
+
+.empty-note{color:var(--ink-soft); font-size:.85rem; text-align:center; padding:20px;}
+.footer-note{text-align:center; color:var(--ink-soft); font-size:.72rem; padding:24px 18px 4px;}
+.pte-tag{display:inline-block; margin-top:6px; font-size:.66rem; font-weight:800; letter-spacing:.03em;
+  color:var(--accent-deep); background:var(--surface-alt); padding:3px 11px; border-radius:999px; border:1px solid var(--line);}
+
+/* ---- reinforce loop ---- */
+.reinforce-steps{display:flex; gap:6px; justify-content:center; margin-bottom:18px; direction:ltr;}
+.reinforce-steps span{width:34px; height:6px; border-radius:999px; background:var(--line);}
+.reinforce-steps span.done{background:var(--teal);}
+.reinforce-steps span.active{background:var(--accent);}
+.reinforce-word-progress{text-align:center; color:var(--ink-soft); font-size:.78rem; font-weight:700; margin-bottom:6px;}
+.reinforce-mode-title{text-align:center; margin-bottom:14px;}
+.reinforce-mode-title .ur{font-size:1.1rem;}
+.reinforce-mode-title .en{font-size:.7rem; color:var(--ink-soft); font-weight:700;}
+.reinforce-card{background:var(--surface-alt); border-radius:18px; padding:26px 20px; text-align:center; margin-bottom:16px;}
+.reinforce-card .big-en{font-family:var(--font-display); font-size:1.7rem; color:var(--ink); direction:ltr;}
+.reinforce-card .big-ur{font-size:1.25rem; color:var(--accent-deep); margin-top:6px;}
+.reinforce-card .ex{font-size:.82rem; color:var(--ink-soft); margin-top:10px; direction:ltr;}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ============================= DATA ============================= */
+const STAGES = [
+  { id:'reading', icon:'📖', ur:'پڑھنا', en:'Reading', levels: [
+    { title_ur:'روزمرہ کے الفاظ', title_en:'Everyday Words',
+      vocab:[
+        {en:'Hello', ur:'سلام / ہیلو', ex_en:'Hello, how are you?', ex_ur:'ہیلو، آپ کیسے ہیں؟'},
+        {en:'Name', ur:'نام', ex_en:'My name is Aslam.', ex_ur:'میرا نام اسلم ہے۔'},
+        {en:'Water', ur:'پانی', ex_en:'I want water.', ex_ur:'مجھے پانی چاہیے۔'},
+        {en:'Food', ur:'کھانا', ex_en:'The food is good.', ex_ur:'کھانا اچھا ہے۔'},
+        {en:'Please', ur:'براہ کرم', ex_en:'Please sit down.', ex_ur:'براہ کرم بیٹھ جائیں۔'},
+        {en:'Thank you', ur:'شکریہ', ex_en:'Thank you very much.', ex_ur:'بہت شکریہ۔'},
+      ],
+      exercises:[
+        {type:'match', word:'Hello'},
+        {type:'match', word:'Name'},
+        {type:'fillblank_mcq', word:'Water', sentence:'I want ___.', options:['water','name','hello','thank you']},
+        {type:'match', word:'Food'},
+        {type:'fillblank_mcq', word:'Please', sentence:'___ sit down.', options:['Please','Water','Food','Name']},
+        {type:'match', word:'Thank you'},
+      ]},
+    { title_ur:'گھر اور خاندان', title_en:'Home & Family',
+      vocab:[
+        {en:'Home', ur:'گھر', ex_en:'I am at home.', ex_ur:'میں گھر پر ہوں۔'},
+        {en:'Family', ur:'خاندان', ex_en:'I love my family.', ex_ur:'مجھے اپنے خاندان سے محبت ہے۔'},
+        {en:'Mother', ur:'امی / والدہ', ex_en:'My mother is kind.', ex_ur:'میری امی مہربان ہیں۔'},
+        {en:'Father', ur:'ابو / والد', ex_en:'My father works hard.', ex_ur:'میرے ابو محنت کرتے ہیں۔'},
+        {en:'Friend', ur:'دوست', ex_en:'He is my friend.', ex_ur:'وہ میرا دوست ہے۔'},
+        {en:'House', ur:'مکان', ex_en:'This is a big house.', ex_ur:'یہ ایک بڑا مکان ہے۔'},
+      ],
+      exercises:[
+        {type:'match', word:'Home'},
+        {type:'match', word:'Mother'},
+        {type:'fillblank_mcq', word:'Mother', sentence:'My ___ is kind.', options:['mother','house','friend','food']},
+        {type:'match', word:'Father'},
+        {type:'match', word:'Friend'},
+        {type:'fillblank_mcq', word:'House', sentence:'This is a big ___.', options:['house','name','water','family']},
+      ]},
+    { title_ur:'وقت اور کام', title_en:'Time & Work',
+      vocab:[
+        {en:'Today', ur:'آج', ex_en:'I am busy today.', ex_ur:'میں آج مصروف ہوں۔'},
+        {en:'Tomorrow', ur:'کل', ex_en:'See you tomorrow.', ex_ur:'کل ملتے ہیں۔'},
+        {en:'Morning', ur:'صبح', ex_en:'Good morning.', ex_ur:'صبح بخیر۔'},
+        {en:'Evening', ur:'شام', ex_en:'See you in the evening.', ex_ur:'شام کو ملتے ہیں۔'},
+        {en:'Time', ur:'وقت', ex_en:'What is the time?', ex_ur:'وقت کیا ہوا ہے؟'},
+        {en:'Work', ur:'کام', ex_en:'I go to work in the morning.', ex_ur:'میں صبح کام پر جاتا ہوں۔'},
+      ],
+      exercises:[
+        {type:'match', word:'Today'},
+        {type:'match', word:'Morning'},
+        {type:'fillblank_mcq', word:'Morning', sentence:'Good ___.', options:['morning','evening','time','work']},
+        {type:'match', word:'Work'},
+        {type:'sentence_mcq', word:'Work', sentence:'I go to work in the morning.',
+          options:['میں صبح کام پر جاتا ہوں','میں شام کو گھر جاتا ہوں','میں کل آؤں گا','میرا نام کام ہے'], correctIndex:0},
+        {type:'match', word:'Evening'},
+      ]},
+    { title_ur:'امتحان کے الفاظ', title_en:'Exam Words',
+      vocab:[
+        {en:'Listen', ur:'سننا', ex_en:'Listen carefully.', ex_ur:'غور سے سنیں۔'},
+        {en:'Speak', ur:'بولنا', ex_en:'Please speak clearly.', ex_ur:'براہ کرم واضح بولیں۔'},
+        {en:'Read', ur:'پڑھنا', ex_en:'Read this sentence aloud.', ex_ur:'یہ جملہ زور سے پڑھیں۔'},
+        {en:'Write', ur:'لکھنا', ex_en:'Write your name.', ex_ur:'اپنا نام لکھیں۔'},
+        {en:'Repeat', ur:'دہرانا', ex_en:'Repeat the sentence.', ex_ur:'جملہ دہرائیں۔'},
+        {en:'Describe', ur:'بیان کرنا', ex_en:'Describe the picture.', ex_ur:'تصویر بیان کریں۔'},
+      ],
+      exercises:[
+        {type:'match', word:'Listen'},
+        {type:'match', word:'Describe'},
+        {type:'fillblank_mcq', word:'Write', sentence:'___ your name.', options:['Write','Listen','Speak','Read']},
+        {type:'match', word:'Repeat'},
+        {type:'fillblank_mcq', word:'Listen', sentence:'___ carefully.', options:['Listen','Write','Food','Home']},
+        {type:'sentence_mcq', word:'Read', sentence:'Read this sentence aloud.',
+          options:['یہ جملہ زور سے پڑھیں','یہ جملہ لکھیں','یہ جملہ سنیں','یہ جملہ دہرائیں'], correctIndex:0},
+      ]},
+  ]},
+  { id:'writing', icon:'✍️', ur:'لکھنا', en:'Writing', levels: [
+    { title_ur:'بنیادی الفاظ', title_en:'Basic Words',
+      vocab:[
+        {en:'I', ur:'میں', ex_en:'I am happy.', ex_ur:'میں خوش ہوں۔'},
+        {en:'am', ur:'ہوں', ex_en:'I am fine.', ex_ur:'میں ٹھیک ہوں۔'},
+        {en:'you', ur:'آپ', ex_en:'You are kind.', ex_ur:'آپ مہربان ہیں۔'},
+        {en:'are', ur:'ہیں', ex_en:'You are welcome.', ex_ur:'خوش آمدید۔'},
+        {en:'name', ur:'نام', ex_en:'My name is Sara.', ex_ur:'میرا نام سارہ ہے۔'},
+        {en:'fine', ur:'ٹھیک', ex_en:'I am fine, thank you.', ex_ur:'میں ٹھیک ہوں، شکریہ۔'},
+      ],
+      exercises:[
+        {type:'fillblank_typed', word:'I', sentence:'___ am happy.', answer:'I'},
+        {type:'fillblank_typed', word:'am', sentence:'I ___ fine.', answer:'am'},
+        {type:'fillblank_typed', word:'you', sentence:'___ are welcome.', answer:'you'},
+        {type:'fillblank_typed', word:'are', sentence:'You ___ kind.', answer:'are'},
+        {type:'fillblank_typed', word:'name', sentence:'My ___ is Sara.', answer:'name'},
+        {type:'reorder', word:'fine', words:['fine','I','am'], answer:['I','am','fine']},
+      ]},
+    { title_ur:'چیزیں', title_en:'Things',
+      vocab:[
+        {en:'have', ur:'میرے پاس ہے', ex_en:'I have a book.', ex_ur:'میرے پاس ایک کتاب ہے۔'},
+        {en:'has', ur:'اس کے پاس ہے', ex_en:'She has a pen.', ex_ur:'اس کے پاس ایک قلم ہے۔'},
+        {en:'book', ur:'کتاب', ex_en:'This book is good.', ex_ur:'یہ کتاب اچھی ہے۔'},
+        {en:'pen', ur:'قلم', ex_en:'Give me the pen.', ex_ur:'مجھے قلم دیں۔'},
+        {en:'table', ur:'میز', ex_en:'Put it on the table.', ex_ur:'اسے میز پر رکھیں۔'},
+        {en:'chair', ur:'کرسی', ex_en:'Sit on the chair.', ex_ur:'کرسی پر بیٹھیں۔'},
+      ],
+      exercises:[
+        {type:'fillblank_typed', word:'have', sentence:'I ___ a book.', answer:'have'},
+        {type:'fillblank_typed', word:'has', sentence:'She ___ a pen.', answer:'has'},
+        {type:'dictation', word:'book', text:'This book is good.'},
+        {type:'fillblank_typed', word:'pen', sentence:'Give me the ___.', answer:'pen'},
+        {type:'reorder', word:'table', words:['table','it','on','the','Put'], answer:['Put','it','on','the','table']},
+        {type:'fillblank_typed', word:'chair', sentence:'Sit on the ___.', answer:'chair'},
+      ]},
+    { title_ur:'عمل', title_en:'Actions',
+      vocab:[
+        {en:'go', ur:'جانا', ex_en:'I go to school.', ex_ur:'میں سکول جاتا ہوں۔'},
+        {en:'come', ur:'آنا', ex_en:'Please come here.', ex_ur:'براہ کرم یہاں آئیں۔'},
+        {en:'school', ur:'سکول', ex_en:'The school is near.', ex_ur:'سکول قریب ہے۔'},
+        {en:'market', ur:'بازار', ex_en:'We go to the market.', ex_ur:'ہم بازار جاتے ہیں۔'},
+        {en:'today', ur:'آج', ex_en:'I am free today.', ex_ur:'میں آج فارغ ہوں۔'},
+        {en:'now', ur:'ابھی', ex_en:'Come here now.', ex_ur:'ابھی یہاں آئیں۔'},
+      ],
+      exercises:[
+        {type:'fillblank_typed', word:'go', sentence:'I ___ to school.', answer:'go'},
+        {type:'dictation', word:'come', text:'Please come here.'},
+        {type:'reorder', word:'school', words:['is','near','The','school'], answer:['The','school','is','near']},
+        {type:'fillblank_typed', word:'market', sentence:'We go to the ___.', answer:'market'},
+        {type:'fillblank_typed', word:'today', sentence:'I am free ___.', answer:'today'},
+        {type:'dictation', word:'now', text:'Come here now.'},
+      ]},
+    { title_ur:'مدد مانگنا', title_en:'Asking for Help',
+      vocab:[
+        {en:'want', ur:'چاہیے', ex_en:'I want some water.', ex_ur:'مجھے پانی چاہیے۔'},
+        {en:'need', ur:'ضرورت', ex_en:'I need your help.', ex_ur:'مجھے آپ کی مدد چاہیے۔'},
+        {en:'help', ur:'مدد', ex_en:'Can you help me?', ex_ur:'کیا آپ میری مدد کر سکتے ہیں؟'},
+        {en:'please', ur:'براہ کرم', ex_en:'Please help me.', ex_ur:'براہ کرم میری مدد کریں۔'},
+        {en:'sorry', ur:'معذرت', ex_en:'I am sorry.', ex_ur:'مجھے افسوس ہے۔'},
+        {en:'understand', ur:'سمجھنا', ex_en:'I do not understand.', ex_ur:'مجھے سمجھ نہیں آیا۔'},
+      ],
+      exercises:[
+        {type:'fillblank_typed', word:'want', sentence:'I ___ some water.', answer:'want'},
+        {type:'reorder', word:'need', words:['help','need','your','I'], answer:['I','need','your','help']},
+        {type:'dictation', word:'help', text:'Can you help me?'},
+        {type:'fillblank_typed', word:'please', sentence:'___ help me.', answer:'please'},
+        {type:'dictation', word:'sorry', text:'I am sorry.'},
+        {type:'fillblank_typed', word:'understand', sentence:'I do not ___.', answer:'understand'},
+      ]},
+  ]},
+  { id:'spoken', icon:'🗣️', ur:'بولنا', en:'Spoken', levels: [
+    { title_ur:'سلام کے الفاظ', title_en:'Greeting Words',
+      vocab:[
+        {en:'Hi', ur:'ہائے', ex_en:'Hi, nice to meet you.', ex_ur:'ہائے، آپ سے مل کر خوشی ہوئی۔'},
+        {en:'Bye', ur:'الوداع', ex_en:'Bye, see you soon.', ex_ur:'الوداع، جلد ملیں گے۔'},
+        {en:'Yes', ur:'جی ہاں', ex_en:'Yes, I understand.', ex_ur:'جی ہاں، میں سمجھ گیا۔'},
+        {en:'No', ur:'نہیں', ex_en:'No, thank you.', ex_ur:'نہیں، شکریہ۔'},
+        {en:'OK', ur:'ٹھیک ہے', ex_en:'OK, I will come.', ex_ur:'ٹھیک ہے، میں آؤں گا۔'},
+        {en:'Sorry', ur:'معذرت', ex_en:'Sorry, I am late.', ex_ur:'معذرت، مجھے دیر ہو گئی۔'},
+      ],
+      exercises:[
+        {type:'listen_repeat', word:'Hi', text:'Hi'},
+        {type:'listen_repeat', word:'Bye', text:'Bye'},
+        {type:'listen_repeat', word:'Yes', text:'Yes'},
+        {type:'listen_repeat', word:'No', text:'No'},
+        {type:'listen_repeat', word:'OK', text:'OK'},
+        {type:'listen_repeat', word:'Sorry', text:'Sorry'},
+      ]},
+    { title_ur:'رنگ اور جانور', title_en:'Colors & Animals',
+      vocab:[
+        {en:'cat', ur:'بلی', ex_en:'The cat is small.', ex_ur:'بلی چھوٹی ہے۔'},
+        {en:'dog', ur:'کتا', ex_en:'The dog is here.', ex_ur:'کتا یہاں ہے۔'},
+        {en:'sun', ur:'سورج', ex_en:'The sun is bright.', ex_ur:'سورج روشن ہے۔'},
+        {en:'moon', ur:'چاند', ex_en:'I see the moon.', ex_ur:'میں چاند دیکھتا ہوں۔'},
+        {en:'red', ur:'سرخ', ex_en:'The apple is red.', ex_ur:'سیب سرخ ہے۔'},
+        {en:'blue', ur:'نیلا', ex_en:'The sky is blue.', ex_ur:'آسمان نیلا ہے۔'},
+      ],
+      exercises:[
+        {type:'listen_repeat', word:'cat', text:'cat'},
+        {type:'read_aloud', word:'dog', text:'The dog is here.'},
+        {type:'listen_repeat', word:'sun', text:'sun'},
+        {type:'read_aloud', word:'moon', text:'I see the moon.'},
+        {type:'describe', word:'red', emoji:'🍎', helper:'red, apple'},
+        {type:'listen_repeat', word:'blue', text:'blue'},
+      ]},
+    { title_ur:'روزمرہ چیزیں', title_en:'Everyday Objects',
+      vocab:[
+        {en:'apple', ur:'سیب', ex_en:'I eat an apple.', ex_ur:'میں سیب کھاتا ہوں۔'},
+        {en:'water', ur:'پانی', ex_en:'Give me water.', ex_ur:'مجھے پانی دیں۔'},
+        {en:'chair', ur:'کرسی', ex_en:'Sit on the chair.', ex_ur:'کرسی پر بیٹھیں۔'},
+        {en:'table', ur:'میز', ex_en:'The book is on the table.', ex_ur:'کتاب میز پر ہے۔'},
+        {en:'book', ur:'کتاب', ex_en:'I read a book.', ex_ur:'میں کتاب پڑھتا ہوں۔'},
+        {en:'phone', ur:'فون', ex_en:'My phone is new.', ex_ur:'میرا فون نیا ہے۔'},
+      ],
+      exercises:[
+        {type:'read_aloud', word:'apple', text:'I eat an apple.'},
+        {type:'listen_repeat', word:'water', text:'water'},
+        {type:'read_aloud', word:'chair', text:'Sit on the chair.'},
+        {type:'read_aloud', word:'table', text:'The book is on the table.'},
+        {type:'describe', word:'book', emoji:'📖', helper:'book, read'},
+        {type:'listen_repeat', word:'phone', text:'phone'},
+      ]},
+    { title_ur:'امتحان کے الفاظ', title_en:'Exam Words',
+      vocab:[
+        {en:'Read aloud', ur:'زور سے پڑھیں', ex_en:'Please read this sentence aloud.', ex_ur:'براہ کرم یہ جملہ زور سے پڑھیں۔'},
+        {en:'Repeat', ur:'دہرائیں', ex_en:'Repeat after me.', ex_ur:'میرے بعد دہرائیں۔'},
+        {en:'Listen carefully', ur:'غور سے سنیں', ex_en:'Listen carefully.', ex_ur:'غور سے سنیں۔'},
+        {en:'Describe', ur:'بیان کریں', ex_en:'Describe the image.', ex_ur:'تصویر بیان کریں۔'},
+        {en:'Summarize', ur:'خلاصہ کریں', ex_en:'This is a short summary.', ex_ur:'یہ ایک مختصر خلاصہ ہے۔'},
+        {en:'Answer', ur:'جواب دیں', ex_en:'Answer the question.', ex_ur:'سوال کا جواب دیں۔'},
+      ],
+      exercises:[
+        {type:'read_aloud', word:'Read aloud', text:'Please read this sentence aloud.'},
+        {type:'listen_repeat', word:'Repeat', text:'Repeat after me.'},
+        {type:'listen_repeat', word:'Listen carefully', text:'Listen carefully.'},
+        {type:'describe', word:'Describe', emoji:'🖼️', helper:'picture, see'},
+        {type:'read_aloud', word:'Summarize', text:'This is a short summary.'},
+        {type:'listen_repeat', word:'Answer', text:'Answer the question.'},
+      ]},
+  ]},
+];
+
+/* ============================= STATE ============================= */
+const STORE_KEY='angrezi_safar_v1';
+function loadState(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return null;
+}
+function defaultState(){
+  const progress={};
+  STAGES.forEach(s=>{ progress[s.id]=s.levels.map((_,i)=>({passed:false,best:0})); });
+  return {name:'', slowAudio:true, progress};
+}
+let S = Object.assign(defaultState(), loadState()||{});
+if(!S.progress) S.progress = defaultState().progress;
+function saveState(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(S)); }catch(e){} }
+
+/* nav state (not persisted) */
+let nav = {view:'welcome', stageId:null, levelIndex:0, qIndex:0, results:[], cur:{}};
+if(S.name) nav.view='home';
+
+/* ============================= HELPERS ============================= */
+function esc(str){ return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function normalize(str){ return String(str).toLowerCase().replace(/[.,!?؟،]/g,'').trim().replace(/\s+/g,' '); }
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function stageById(id){ return STAGES.find(s=>s.id===id); }
+function isLevelUnlocked(stageId, idx){ if(idx===0) return true; return S.progress[stageId][idx-1].passed; }
+function totalStars(){ let n=0; STAGES.forEach(s=>S.progress[s.id].forEach(l=>{ if(l.passed) n++; })); return n; }
+function totalLevels(){ return STAGES.reduce((n,s)=>n+s.levels.length,0); }
+
+function speak(text, rate){
+  if(!('speechSynthesis' in window)) return;
+  try{
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US';
+    u.rate = rate || (S.slowAudio ? 0.72 : 1.0);
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+let recognizer=null;
+function getRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return null;
+  const r = new SR();
+  r.lang='en-US'; r.interimResults=false; r.maxAlternatives=1;
+  return r;
+}
+function matchScore(target, spoken){
+  const t = normalize(target).split(' ').filter(Boolean);
+  const s = new Set(normalize(spoken).split(' ').filter(Boolean));
+  if(t.length===0) return 0;
+  let hit=0; t.forEach(w=>{ if(s.has(w)) hit++; });
+  return hit/t.length;
+}
+
+/* ============================= RENDER ROOT ============================= */
+function render(){
+  const app=document.getElementById('app');
+  let html='';
+  if(nav.view!=='welcome') html += renderTopbar();
+  switch(nav.view){
+    case 'welcome': html += renderWelcome(); break;
+    case 'home': html += renderHome(); break;
+    case 'stage': html += renderStage(); break;
+    case 'levelIntro': html += renderLevelIntro(); break;
+    case 'exercise': html += renderExercise(); break;
+    case 'result': html += renderResult(); break;
+    case 'reinforce': html += renderReinforce(); break;
+  }
+  app.innerHTML = html;
+  window.scrollTo(0,0);
+  afterRender();
+}
+
+function renderTopbar(){
+  return `<div class="topbar">
+    <button class="header-row" style="background:none;border:none;padding:0" onclick="app_goHome()">
+      <div class="brand">
+        <div class="brand-mark">🧭</div>
+        <div class="brand-text">
+          <h1 class="ur">انگریزی سفر</h1>
+          <div class="en">ANGREZI SAFAR</div>
+        </div>
+      </div>
+    </button>
+    <div class="header-row">
+      <button class="audio-toggle ${S.slowAudio?'on':''}" onclick="app_toggleSlow()">${S.slowAudio?'🐢 آہستہ':'🐇 عام'}</button>
+      <div class="stars-pill">⭐ ${totalStars()}/${totalLevels()}</div>
+    </div>
+  </div>`;
+}
+
+/* ---------- Welcome ---------- */
+function renderWelcome(){
+  return `<div class="welcome">
+    <div class="compass">🧭</div>
+    <h2 class="ur">انگریزی سفر میں خوش آمدید</h2>
+    <p class="en">WELCOME TO YOUR ENGLISH JOURNEY</p>
+    <div class="card stack">
+      <div class="bilingual" style="text-align:center">
+        <div class="ur">آپ کا نام کیا ہے؟</div>
+        <div class="en">WHAT IS YOUR NAME?</div>
+      </div>
+      <input id="nameInput" class="name-input" type="text" placeholder="یہاں لکھیں / Type here" />
+      <button class="btn btn-primary" onclick="app_startJourney()">🚀 سفر شروع کریں <span style="font-size:.7em;opacity:.8">(Start)</span></button>
+    </div>
+  </div>`;
+}
+
+/* ---------- Home ---------- */
+function renderHome(){
+  const cards = STAGES.map(s=>{
+    const lv = S.progress[s.id];
+    const currentIdx = lv.findIndex(l=>!l.passed);
+    const dots = lv.map((l,i)=>{
+      const cls = l.passed?'passed':(isLevelUnlocked(s.id,i)? (i===currentIdx?'current':'passed') : 'locked');
+      const label = l.passed?'✓':(isLevelUnlocked(s.id,i)? (i+1) : '🔒');
+      return `<div class="dot ${cls}">${label}</div>`;
+    }).join('');
+    return `<div class="stage-card" onclick="app_openStage('${s.id}')">
+      <div class="stage-top">
+        <div class="dots">${dots}</div>
+        <div class="stage-title">
+          <div class="ur">${s.ur}</div>
+          <div class="en">${s.en.toUpperCase()}</div>
+        </div>
+        <div class="stage-icon">${s.icon}</div>
+      </div>
+    </div>`;
+  }).join('');
+  const name = S.name ? esc(S.name) : '';
+  return `<div class="hero bilingual">
+      <div class="ur">${name?`خوش آمدید، ${name}!`:'خوش آمدید!'}</div>
+      <div class="en">${name?`WELCOME, ${name.toUpperCase()}!`:'WELCOME!'} PICK A TRACK TO PRACTICE</div>
+    </div>
+    <div class="screen stack">${cards}</div>
+    <div class="footer-note">روزانہ تھوڑی مشق بہترین نتیجہ دیتی ہے 🌱 Little practice every day works best.</div>`;
+}
+
+/* ---------- Stage path ---------- */
+function renderStage(){
+  const s = stageById(nav.stageId);
+  const lv = S.progress[s.id];
+  const nodes = s.levels.map((l,i)=>{
+    const unlocked = isLevelUnlocked(s.id,i);
+    const passed = lv[i].passed;
+    const badgeCls = passed?'passed':(unlocked?'current':'locked');
+    const badgeLabel = passed?'★':(unlocked?(i+1):'🔒');
+    return `<div class="node">
+      <div class="node-badge ${badgeCls}">${badgeLabel}</div>
+      <div class="node-card ${unlocked?'':'locked'}" ${unlocked?`onclick="app_openLevel(${i})"`:''}>
+        <div class="node-arrow">${unlocked?'›':''}</div>
+        <div class="lvl-title bilingual">
+          <div class="ur">لیول ${i+1} · ${l.title_ur}</div>
+          <div class="en">LEVEL ${i+1} · ${l.title_en}${passed?` · Best ${lv[i].best}/6`:''}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="hero bilingual">
+      <div class="ur">${s.icon} ${s.ur} کا راستہ</div>
+      <div class="en">${s.en.toUpperCase()} PATH</div>
+    </div>
+    <div class="screen">
+      <div class="trail">${nodes}</div>
+      <button class="btn btn-ghost" style="margin-top:10px" onclick="app_goHome()">⬅ واپس <span style="opacity:.7">(Back)</span></button>
+    </div>`;
+}
+
+/* ---------- Level intro (vocab) ---------- */
+function renderLevelIntro(){
+  const s = stageById(nav.stageId);
+  const level = s.levels[nav.levelIndex];
+  const items = level.vocab.map((v,i)=>`
+    <div class="vocab-item">
+      <button class="listen-btn" onclick="speak('${esc(v.en).replace(/'/g,"\\'")}')">🔊</button>
+      <div class="vocab-word">
+        <div class="en">${esc(v.en)}</div>
+        <div class="ur">${v.ur}</div>
+        <div class="ex">${esc(v.ex_en)}</div>
+        <div class="ex-ur">${v.ex_ur}</div>
+      </div>
+    </div>`).join('');
+  return `<div class="hero bilingual">
+      <div class="ur">لیول ${nav.levelIndex+1} · ${level.title_ur}</div>
+      <div class="en">LEVEL ${nav.levelIndex+1} · ${level.title_en}</div>
+    </div>
+    <div class="screen stack">
+      <div class="bilingual" style="text-align:right">
+        <div class="ur">پہلے یہ الفاظ سنیں اور یاد کریں</div>
+        <div class="en">LISTEN &amp; LEARN THESE WORDS FIRST</div>
+      </div>
+      ${items}
+      <button class="btn btn-primary" onclick="app_startExercises()">▶️ مشق شروع کریں <span style="font-size:.7em;opacity:.8">(Start Practice)</span></button>
+      <button class="btn btn-ghost" onclick="app_openStage('${s.id}')">⬅ واپس</button>
+    </div>`;
+}
+
+/* ---------- Exercise flow ---------- */
+function currentLevel(){ const s=stageById(nav.stageId); return s.levels[nav.levelIndex]; }
+function currentExercise(){ return currentLevel().exercises[nav.qIndex]; }
+
+function renderExercise(){
+  const level = currentLevel();
+  const total = level.exercises.length;
+  const ex = currentExercise();
+  const pct = Math.round((nav.qIndex/total)*100);
+  nav.cur = nav.cur && nav.cur.forQ===nav.qIndex ? nav.cur : {forQ:nav.qIndex, answered:false};
+
+  let body='';
+  if(ex.type==='match'){
+    const vocab = level.vocab.find(v=>v.en===ex.word);
+    const distractors = shuffle(level.vocab.filter(v=>v.en!==ex.word)).slice(0,3).map(v=>v.ur);
+    const opts = nav.cur.opts || (nav.cur.opts = shuffle([vocab.ur, ...distractors]));
+    body = `<div class="q-prompt">${esc(ex.word)}
+        <button class="listen-btn" style="margin-top:10px" onclick="speak('${esc(ex.word).replace(/'/g,"\\'")}')">🔊</button>
+      </div>
+      <div class="options">${opts.map((o,i)=>`<button class="option-btn" data-i="${i}" onclick="app_answerOption(${i})">${o}</button>`).join('')}</div>`;
+  } else if(ex.type==='fillblank_mcq'){
+    const opts = nav.cur.opts || (nav.cur.opts = shuffle(ex.options));
+    body = `<div class="q-prompt">${esc(ex.sentence).replace('___','<span class="blank">____</span>')}</div>
+      <div class="options">${opts.map((o,i)=>`<button class="option-btn" data-i="${i}" style="direction:ltr;text-align:center" onclick="app_answerOption(${i})">${esc(o)}</button>`).join('')}</div>`;
+  } else if(ex.type==='sentence_mcq'){
+    body = `<div class="q-prompt">${esc(ex.sentence)}
+        <button class="listen-btn" style="margin-top:10px" onclick="speak('${esc(ex.sentence).replace(/'/g,"\\'")}')">🔊</button>
+      </div>
+      <div class="options">${ex.options.map((o,i)=>`<button class="option-btn" data-i="${i}" onclick="app_answerOption(${i})">${o}</button>`).join('')}</div>`;
+  } else if(ex.type==='fillblank_typed'){
+    body = `<div class="q-prompt">${esc(ex.sentence).replace('___','<span class="blank">____</span>')}</div>
+      <input id="typedInput" type="text" class="name-input" placeholder="یہاں لفظ لکھیں / type the word" autocomplete="off" onkeydown="if(event.key==='Enter')app_checkTyped()">
+      <button class="btn btn-primary" style="margin-top:12px" onclick="app_checkTyped()">✔️ چیک کریں <span style="opacity:.8;font-size:.7em">(Check)</span></button>`;
+  } else if(ex.type==='dictation'){
+    body = `<div class="q-prompt" style="direction:ltr">🔊
+        <button class="listen-btn" style="margin:8px auto 0;display:flex" onclick="speak('${esc(ex.text).replace(/'/g,"\\'")}')">🔊</button>
+        <span class="ur-sub">جو سنیں وہ لکھیں</span>
+      </div>
+      <input id="typedInput" type="text" class="name-input" placeholder="یہاں لکھیں / type what you hear" autocomplete="off" onkeydown="if(event.key==='Enter')app_checkTyped()">
+      <button class="btn btn-primary" style="margin-top:12px" onclick="app_checkTyped()">✔️ چیک کریں <span style="opacity:.8;font-size:.7em">(Check)</span></button>`;
+  } else if(ex.type==='reorder'){
+    const words = nav.cur.pool || (nav.cur.pool = shuffle(ex.words));
+    const built = nav.cur.built || (nav.cur.built = []);
+    body = `<div class="q-instruction bilingual"><div class="ur">لفظوں کو صحیح ترتیب میں دبائیں</div><div class="en">TAP THE WORDS IN THE RIGHT ORDER</div></div>
+      <div class="answer-strip" id="answerStrip">${built.map((w,i)=>`<span class="chip" onclick="app_removeChip(${i})">${esc(w)}</span>`).join('') || '<span style="color:var(--ink-soft);font-size:.85rem">…</span>'}</div>
+      <div class="chips">${words.map((w,i)=>`<button class="chip" id="pool-${i}" ${built.includes(w)&&built.filter(x=>x===w).length>countOcc(built.slice(0,built.length),w)?'':''} onclick="app_addChip(${i})">${esc(w)}</button>`).join('')}</div>
+      <button class="btn btn-primary" onclick="app_checkReorder()">✔️ چیک کریں <span style="opacity:.8;font-size:.7em">(Check)</span></button>`;
+  } else if(ex.type==='listen_repeat' || ex.type==='read_aloud'){
+    const showText = ex.type==='read_aloud';
+    body = `<div class="q-prompt" style="direction:ltr">
+        ${showText? esc(ex.text) : '🔊'}
+        <button class="listen-btn" style="margin:10px auto 0;display:flex" onclick="speak('${esc(ex.text).replace(/'/g,"\\'")}')">🔊</button>
+      </div>
+      <div class="mic-wrap">
+        <button class="mic-btn" id="micBtn" onclick="app_startMic('${esc(ex.text).replace(/'/g,"\\'")}')">🎤</button>
+        <div class="mic-caption ur" id="micCaption">بولنے کے لیے دبائیں</div>
+      </div>
+      <div id="micResult"></div>`;
+  } else if(ex.type==='describe'){
+    body = `<div class="emoji-prompt">${ex.emoji}</div>
+      <div class="q-instruction bilingual" style="text-align:center"><div class="ur">اس تصویر کو ایک انگریزی جملے میں بیان کریں</div><div class="en">DESCRIBE THIS PICTURE IN ONE ENGLISH SENTENCE</div></div>
+      <div class="helper-words">💡 ${esc(ex.helper)}</div>
+      <div class="mic-wrap">
+        <button class="mic-btn" id="micBtn" onclick="app_startMic(null)">🎤</button>
+        <div class="mic-caption ur" id="micCaption">بولنے کے لیے دبائیں</div>
+      </div>
+      <div id="micResult"></div>`;
+  }
+
+  const instr = exerciseInstruction(ex.type);
+  return `<div class="screen">
+    <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+    <div class="q-instruction bilingual"><div class="ur">${instr.ur}</div><div class="en">${instr.en}</div>
+      <div class="pte-tag">${pteTag(ex.type)}</div>
+    </div>
+    ${body}
+    <div id="feedbackArea"></div>
+    <div id="nextArea" style="margin-top:16px"></div>
+  </div>`;
+}
+function countOcc(arr,w){ return arr.filter(x=>x===w).length; }
+
+function exerciseInstruction(type){
+  switch(type){
+    case 'match': return {ur:'صحیح معنی چنیں', en:'CHOOSE THE CORRECT MEANING'};
+    case 'fillblank_mcq': return {ur:'خالی جگہ پُر کریں', en:'FILL IN THE BLANK'};
+    case 'sentence_mcq': return {ur:'اس جملے کا مطلب چنیں', en:'CHOOSE WHAT THIS SENTENCE MEANS'};
+    case 'fillblank_typed': return {ur:'صحیح لفظ لکھیں', en:'TYPE THE CORRECT WORD'};
+    case 'dictation': return {ur:'سن کر لکھیں', en:'LISTEN AND TYPE'};
+    case 'reorder': return {ur:'جملہ بنائیں', en:'BUILD THE SENTENCE'};
+    case 'listen_repeat': return {ur:'سنیں اور دہرائیں', en:'LISTEN AND REPEAT'};
+    case 'read_aloud': return {ur:'زور سے پڑھیں', en:'READ ALOUD'};
+    case 'describe': return {ur:'تصویر بیان کریں', en:'DESCRIBE THE PICTURE'};
+    default: return {ur:'', en:''};
+  }
+}
+function pteTag(type){
+  const map={
+    match:'PTE Reading · Vocabulary',
+    fillblank_mcq:'PTE Reading & Writing · Fill in the Blanks',
+    sentence_mcq:'PTE Listening · Multiple Choice',
+    fillblank_typed:'PTE Writing · Fill in the Blanks',
+    dictation:'PTE Listening · Write from Dictation',
+    reorder:'PTE Reading · Re-order Paragraphs',
+    listen_repeat:'PTE Speaking · Repeat Sentence',
+    read_aloud:'PTE Speaking · Read Aloud',
+    describe:'PTE Speaking · Describe Image',
+  };
+  return map[type] || 'PTE Practice';
+}
+function getMissedVocab(){
+  const level = currentLevel();
+  return level.exercises.filter((ex,i)=>!nav.results[i]).map(ex=>level.vocab.find(v=>v.en===ex.word)).filter(Boolean);
+}
+
+/* ---------- Result ---------- */
+function renderResult(){
+  const level = currentLevel();
+  const total = level.exercises.length;
+  const correct = nav.results.filter(r=>r).length;
+  const passed = correct>=4;
+  const pct = Math.round((correct/total)*100);
+  const missedWords = getMissedVocab();
+
+  let reviewHtml='';
+  if(!passed && missedWords.length){
+    reviewHtml = `<div class="review-list">
+      <div class="review-head bilingual" style="text-align:right"><span class="ur">🔁 یہ الفاظ دوبارہ دیکھیں</span><br><span class="en" style="font-size:.7em">WORDS TO REVIEW</span></div>
+      ${missedWords.map(v=>`<div class="vocab-item">
+        <button class="listen-btn" onclick="speak('${esc(v.en).replace(/'/g,"\\'")}')">🔊</button>
+        <div class="vocab-word"><div class="en">${esc(v.en)}</div><div class="ur">${v.ur}</div><div class="ex">${esc(v.ex_en)}</div></div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  const s = stageById(nav.stageId);
+  const isLastLevel = nav.levelIndex === s.levels.length-1;
+
+  return `<div class="screen result-wrap">
+    <div class="score-ring" style="--pct:${pct}; --ring-color:${passed?'var(--teal)':'var(--rose)'}">
+      <div class="score-ring-inner">
+        <div class="num">${correct}/${total}</div>
+        <div class="of">${pct}%</div>
+      </div>
+    </div>
+    <div class="result-title ur">${passed? '🎉 شاباش! لیول پاس ہو گیا' : 'کوئی بات نہیں، دوبارہ کوشش کریں'}</div>
+    <div class="result-title en">${passed? 'GREAT JOB! LEVEL PASSED' : "THAT'S OK — TRY AGAIN"}</div>
+    ${reviewHtml}
+    <div class="stack" style="margin-top:10px">
+      ${!passed && missedWords.length ? `<button class="btn btn-primary" onclick="app_startReinforce()">🎧✍️🎤 سن کر، لکھ کر، بول کر مشق کریں <span style="opacity:.8;font-size:.65em">(Practice by Listening, Writing &amp; Speaking)</span></button>
+      <button class="btn btn-ghost" onclick="app_retryLevel()">🔁 سیدھا دوبارہ کوشش کریں <span style="opacity:.7;font-size:.75em">(Skip &amp; Retry)</span></button>` : ''}
+      ${!passed && !missedWords.length ? `<button class="btn btn-primary" onclick="app_retryLevel()">🔁 دوبارہ کوشش کریں <span style="opacity:.8;font-size:.7em">(Try Again)</span></button>` : ''}
+      ${passed && !isLastLevel ? `<button class="btn btn-teal" onclick="app_nextLevel()">➡️ اگلا لیول <span style="opacity:.8;font-size:.7em">(Next Level)</span></button>` : ''}
+      ${passed ? `<button class="btn btn-secondary" onclick="app_retryLevel()">🔁 پھر مشق کریں <span style="opacity:.8;font-size:.7em">(Practice Again)</span></button>` : ''}
+      <button class="btn btn-ghost" onclick="app_openStage('${nav.stageId}')">⬅ راستے پر واپس <span style="opacity:.7">(Back to Path)</span></button>
+    </div>
+  </div>`;
+}
+
+/* ---------- Reinforce loop (fail -> listen + type + speak each missed word -> retry) ---------- */
+function app_startReinforce(){
+  const words = getMissedVocab();
+  nav.reinforce = {words, idx:0, mode:0, cur:{}};
+  nav.view='reinforce'; render();
+}
+function renderReinforce(){
+  const r = nav.reinforce;
+  const v = r.words[r.idx];
+  const modeNames = [
+    {ur:'سنیں', en:'LISTEN'},
+    {ur:'لکھیں', en:'TYPE IT'},
+    {ur:'بولیں', en:'SAY IT'},
+  ];
+  const steps = [0,1,2].map(i=>`<span class="${i<r.mode?'done':(i===r.mode?'active':'')}"></span>`).join('');
+  let body='';
+  if(r.mode===0){
+    body = `<div class="reinforce-card">
+      <div class="big-en">${esc(v.en)}</div>
+      <div class="big-ur">${v.ur}</div>
+      <div class="ex">${esc(v.ex_en)}</div>
+    </div>
+    <div style="text-align:center;margin-bottom:14px">
+      <button class="listen-btn" style="width:60px;height:60px;font-size:1.6rem" onclick="speak('${esc(v.en).replace(/'/g,"\\'")}')">🔊</button>
+    </div>
+    <button class="btn btn-primary" onclick="app_reinforceAdvance()">اگلا ➡️ <span style="opacity:.8;font-size:.7em">(Next)</span></button>`;
+  } else if(r.mode===1){
+    const checked = r.cur.typedChecked;
+    body = `<div class="reinforce-card">
+      <div class="big-ur">${v.ur}</div>
+      ${checked? `<div class="big-en" style="margin-top:10px">${esc(v.en)}</div>` : ''}
+    </div>
+    <div style="text-align:center;margin-bottom:14px">
+      <button class="listen-btn" onclick="speak('${esc(v.en).replace(/'/g,"\\'")}')">🔊</button>
+    </div>
+    ${!checked ? `
+      <input id="reinforceInput" type="text" class="name-input" placeholder="انگریزی لفظ لکھیں / type the English word" autocomplete="off" onkeydown="if(event.key==='Enter')app_reinforceCheckType()">
+      <button class="btn btn-primary" style="margin-top:12px" onclick="app_reinforceCheckType()">✔️ چیک کریں</button>
+    ` : `<button class="btn btn-primary" onclick="app_reinforceAdvance()">اگلا ➡️ <span style="opacity:.8;font-size:.7em">(Next)</span></button>`}`;
+  } else {
+    body = `<div class="reinforce-card">
+      <div class="big-en">${esc(v.en)}</div>
+      <div class="big-ur">${v.ur}</div>
+    </div>
+    <div class="mic-wrap">
+      <button class="mic-btn" id="micBtn" onclick="app_reinforceMic('${esc(v.en).replace(/'/g,"\\'")}')">🎤</button>
+      <div class="mic-caption ur" id="micCaption">بولنے کے لیے دبائیں</div>
+    </div>
+    <div id="micResult"></div>`;
+  }
+  return `<div class="screen">
+    <div class="reinforce-word-progress">لفظ ${r.idx+1} / ${r.words.length} · WORD ${r.idx+1} OF ${r.words.length}</div>
+    <div class="reinforce-steps">${steps}</div>
+    <div class="reinforce-mode-title bilingual"><div class="ur">${modeNames[r.mode].ur}</div><div class="en">${modeNames[r.mode].en}</div></div>
+    ${body}
+    <button class="btn btn-ghost" style="margin-top:20px" onclick="app_retryLevel()">مشق چھوڑ کر دوبارہ کوشش کریں <span style="opacity:.7;font-size:.75em">(Skip to Retry)</span></button>
+  </div>`;
+}
+function app_reinforceCheckType(){
+  const r = nav.reinforce;
+  const v = r.words[r.idx];
+  const input = document.getElementById('reinforceInput');
+  r.cur.typedChecked = true;
+  r.cur.typedCorrect = normalize(input.value)===normalize(v.en);
+  render();
+}
+function app_reinforceMic(targetText){
+  const btn = document.getElementById('micBtn');
+  const caption = document.getElementById('micCaption');
+  const rec = getRecognition();
+  const finish = ()=>{
+    document.getElementById('micResult').innerHTML += `<button class="btn btn-primary" style="margin-top:12px" onclick="app_reinforceAdvance()">اگلا ➡️ <span style="opacity:.8;font-size:.7em">(Next)</span></button>`;
+  };
+  if(!rec){
+    caption.textContent='مائیک دستیاب نہیں — اونچی آواز میں بول کر مشق کریں';
+    document.getElementById('micResult').innerHTML = `<div class="self-report">
+      <button class="btn btn-teal" onclick="app_reinforceAdvance()">👍 میں نے بول لیا</button>
+    </div>`;
+    return;
+  }
+  btn.classList.add('listening');
+  caption.textContent='سن رہا ہوں... اب بولیں';
+  try{
+    rec.start();
+    rec.onresult = (e)=>{
+      const said = e.results[0][0].transcript;
+      btn.classList.remove('listening');
+      caption.textContent='مکمل ہوا';
+      const good = matchScore(targetText, said)>=0.5;
+      document.getElementById('micResult').innerHTML = `<div class="transcript-box">🗣️ ${esc(said)}</div>
+        <div class="feedback-flash ${good?'good':'bad'}">${good? '✅ بہت خوب!' : '🔁 ایک بار پھر کوشش کریں'}</div>`;
+      finish();
+    };
+    rec.onerror = ()=>{
+      btn.classList.remove('listening');
+      caption.textContent='آواز نہیں پہچانی گئی';
+      document.getElementById('micResult').innerHTML='';
+      finish();
+    };
+  }catch(e){ caption.textContent='مائیک دستیاب نہیں'; finish(); }
+}
+function app_reinforceAdvance(){
+  const r = nav.reinforce;
+  if(r.mode<2){
+    r.mode++; r.cur={};
+  } else if(r.idx < r.words.length-1){
+    r.idx++; r.mode=0; r.cur={};
+  } else {
+    app_retryLevel();
+    return;
+  }
+  render();
+}
+
+/* ============================= INTERACTIONS ============================= */
+function afterRender(){
+  if(nav.view==='exercise'){
+    const ex = currentExercise();
+    if((ex.type==='listen_repeat') && !nav.cur.answered){
+      setTimeout(()=>speak(ex.text), 300);
+    }
+  }
+}
+
+function app_goHome(){ nav.view='home'; render(); }
+function app_toggleSlow(){ S.slowAudio=!S.slowAudio; saveState(); render(); }
+
+function app_startJourney(){
+  const val = document.getElementById('nameInput').value.trim();
+  S.name = val; saveState();
+  nav.view='home'; render();
+}
+
+function app_openStage(stageId){ nav.stageId=stageId; nav.view='stage'; render(); }
+
+function app_openLevel(idx){
+  nav.levelIndex=idx; nav.view='levelIntro'; render();
+}
+
+function app_startExercises(){
+  nav.qIndex=0; nav.results=[]; nav.cur={}; nav.view='exercise'; render();
+}
+
+function lockOptions(){
+  document.querySelectorAll('.option-btn').forEach(b=>b.disabled=true);
+}
+
+function showFeedback(good, correctText){
+  const area=document.getElementById('feedbackArea');
+  if(!area) return;
+  area.innerHTML = `<div class="feedback-flash ${good?'good':'bad'}">
+    ${good? '✅ بہت خوب!' : `❌ صحیح جواب: ${esc(correctText)}`}
+  </div>`;
+  const nextArea=document.getElementById('nextArea');
+  nextArea.innerHTML = `<button class="btn btn-primary" onclick="app_nextQuestion()">اگلا سوال ➡️ <span style="opacity:.8;font-size:.7em">(Next)</span></button>`;
+}
+
+function app_answerOption(i){
+  if(nav.cur.answered) return;
+  nav.cur.answered=true;
+  const ex = currentExercise();
+  let correct=false, correctText='';
+  if(ex.type==='match'){
+    const vocab = currentLevel().vocab.find(v=>v.en===ex.word);
+    const opts = nav.cur.opts;
+    correct = opts[i]===vocab.ur;
+    correctText = vocab.ur;
+    document.querySelectorAll('.option-btn').forEach((b,idx)=>{
+      if(opts[idx]===vocab.ur) b.classList.add('correct');
+      else if(idx===i) b.classList.add('wrong');
+    });
+  } else if(ex.type==='fillblank_mcq'){
+    const opts = nav.cur.opts;
+    correct = normalize(opts[i])===normalize(ex.word);
+    correctText = ex.word;
+    document.querySelectorAll('.option-btn').forEach((b,idx)=>{
+      if(normalize(opts[idx])===normalize(ex.word)) b.classList.add('correct');
+      else if(idx===i) b.classList.add('wrong');
+    });
+  } else if(ex.type==='sentence_mcq'){
+    correct = i===ex.correctIndex;
+    correctText = ex.options[ex.correctIndex];
+    document.querySelectorAll('.option-btn').forEach((b,idx)=>{
+      if(idx===ex.correctIndex) b.classList.add('correct');
+      else if(idx===i) b.classList.add('wrong');
+    });
+  }
+  lockOptions();
+  nav.results[nav.qIndex]=correct;
+  showFeedback(correct, correctText);
+}
+
+function app_checkTyped(){
+  if(nav.cur.answered) return;
+  const ex = currentExercise();
+  const input = document.getElementById('typedInput');
+  const val = input.value;
+  let target = ex.type==='dictation' ? ex.text : ex.answer;
+  const correct = normalize(val)===normalize(target);
+  nav.cur.answered=true;
+  input.disabled=true;
+  nav.results[nav.qIndex]=correct;
+  showFeedback(correct, target);
+}
+
+function app_addChip(i){
+  if(nav.cur.answered) return;
+  const words = nav.cur.pool;
+  const btn = document.getElementById('pool-'+i);
+  if(btn.disabled) return;
+  nav.cur.built.push(words[i]);
+  btn.disabled=true;
+  rerenderReorderUI();
+}
+function app_removeChip(i){
+  if(nav.cur.answered) return;
+  const removed = nav.cur.built.splice(i,1)[0];
+  const words = nav.cur.pool;
+  for(let idx=0; idx<words.length; idx++){
+    const btn = document.getElementById('pool-'+idx);
+    if(words[idx]===removed && btn.disabled){ btn.disabled=false; break; }
+  }
+  rerenderReorderUI();
+}
+function rerenderReorderUI(){
+  const strip = document.getElementById('answerStrip');
+  strip.innerHTML = nav.cur.built.length
+    ? nav.cur.built.map((w,i)=>`<span class="chip" onclick="app_removeChip(${i})">${esc(w)}</span>`).join('')
+    : '<span style="color:var(--ink-soft);font-size:.85rem">…</span>';
+}
+function app_checkReorder(){
+  if(nav.cur.answered) return;
+  const ex = currentExercise();
+  const built = nav.cur.built;
+  const correct = built.length===ex.answer.length && built.every((w,i)=>w===ex.answer[i]);
+  nav.cur.answered=true;
+  nav.results[nav.qIndex]=correct;
+  document.querySelectorAll('.chip').forEach(c=>c.style.pointerEvents='none');
+  showFeedback(correct, ex.answer.join(' '));
+}
+
+function app_startMic(targetText){
+  const ex = currentExercise();
+  const btn = document.getElementById('micBtn');
+  const caption = document.getElementById('micCaption');
+  const rec = getRecognition();
+  if(!rec){
+    caption.innerHTML = 'مائیک دستیاب نہیں — اونچی آواز میں بولنے کی مشق کریں';
+    document.getElementById('micResult').innerHTML = `<div class="self-report">
+      <button class="btn btn-teal" onclick="app_selfReport(true)">👍 میں نے بول لیا</button>
+      <button class="btn btn-secondary" onclick="app_selfReport(false)">🔁 مزید مشق چاہیے</button>
+    </div>`;
+    return;
+  }
+  btn.classList.add('listening');
+  caption.textContent = 'سن رہا ہوں... اب بولیں';
+  try{
+    rec.start();
+    rec.onresult = (e)=>{
+      const said = e.results[0][0].transcript;
+      btn.classList.remove('listening');
+      caption.textContent = 'مکمل ہوا';
+      const target = targetText || said;
+      const score = targetText ? matchScore(target, said) : 1;
+      const good = score>=0.55;
+      document.getElementById('micResult').innerHTML = `
+        <div class="transcript-box">🗣️ ${esc(said)}</div>
+        <div class="feedback-flash ${good?'good':'bad'}">${good? '✅ بہت خوب!' : '🔁 دوبارہ کوشش کریں یا اگلے سوال پر جائیں'}</div>
+        <button class="btn btn-primary" style="margin-top:12px" onclick="app_micDone(${good})">اگلا سوال ➡️</button>`;
+      nav.cur.micDone=true;
+    };
+    rec.onerror = ()=>{
+      btn.classList.remove('listening');
+      caption.textContent='آواز نہیں پہچانی گئی، دوبارہ کوشش کریں یا خود چیک کریں';
+      document.getElementById('micResult').innerHTML = `<div class="self-report">
+        <button class="btn btn-teal" onclick="app_selfReport(true)">👍 میں نے بول لیا</button>
+        <button class="btn btn-secondary" onclick="app_selfReport(false)">🔁 مزید مشق چاہیے</button>
+      </div>`;
+    };
+  }catch(e){
+    caption.textContent='مائیک دستیاب نہیں';
+  }
+}
+function app_selfReport(good){
+  if(nav.cur.answered) return;
+  nav.cur.answered=true;
+  nav.results[nav.qIndex]=good;
+  document.getElementById('micResult').innerHTML += `<button class="btn btn-primary" style="margin-top:12px" onclick="app_nextQuestion()">اگلا سوال ➡️</button>`;
+}
+function app_micDone(good){
+  if(nav.cur.answered) return;
+  nav.cur.answered=true;
+  nav.results[nav.qIndex]=good;
+  app_nextQuestion();
+}
+
+function app_nextQuestion(){
+  const level = currentLevel();
+  if(nav.qIndex < level.exercises.length-1){
+    nav.qIndex++; nav.cur={forQ:nav.qIndex, answered:false};
+    render();
+  } else {
+    const correct = nav.results.filter(r=>r).length;
+    const passed = correct>=4;
+    const prog = S.progress[nav.stageId][nav.levelIndex];
+    prog.best = Math.max(prog.best, correct);
+    if(passed) prog.passed = true;
+    saveState();
+    nav.view='result'; render();
+  }
+}
+
+function app_retryLevel(){ nav.qIndex=0; nav.results=[]; nav.cur={}; nav.view='exercise'; render(); }
+function app_nextLevel(){ nav.levelIndex++; nav.view='levelIntro'; render(); }
+
+/* ============================= INIT ============================= */
+render();
+</script>
+</body>
+</html>
