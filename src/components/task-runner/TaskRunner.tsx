@@ -16,6 +16,7 @@ import { DictationRenderer } from "./DictationRenderer";
 import { AudioGate } from "./AudioGate";
 import { ScoreCard } from "./ScoreCard";
 import { useTaskNav } from "./useTaskNav";
+import { useScrollToTop } from "@/lib/hooks/useScrollToTop";
 import type {
   EssayWritingPayload,
   HighlightCorrectSummaryPayload,
@@ -44,6 +45,8 @@ export function TaskRunner({
   const [score, setScore] = useState<ScoreBreakdown | null>(null);
   const payload = question.payload as Record<string, unknown>;
   const { goNext, goBack } = useTaskNav();
+  useScrollToTop(question.id); // new question loaded (via route change) — make sure we start at the top
+  useScrollToTop(score !== null); // score just appeared in place — scroll up so it's actually seen
 
   async function handleSubmit(response: ResponsePayload) {
     setGrading(true);

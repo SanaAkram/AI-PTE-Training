@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { GrammarPointRow } from "@/lib/types";
 import { Bilingual, Button, Card } from "@/components/ui";
 import { ReplayButton } from "@/components/task-runner/ReplayButton";
+import { useScrollToTop } from "@/lib/hooks/useScrollToTop";
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -19,6 +20,7 @@ export default function GrammarClient({ points }: { points: GrammarPointRow[] })
   const [idx, setIdx] = useState(0);
   const [answered, setAnswered] = useState<string | null>(null);
   const point = pool[idx % pool.length];
+  useScrollToTop(idx);
 
   function next() {
     setIdx((i) => i + 1);

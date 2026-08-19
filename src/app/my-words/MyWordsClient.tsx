@@ -8,6 +8,7 @@ import type { VocabLookupResult } from "@/lib/vocabLookup";
 import { Bilingual, Button, Card } from "@/components/ui";
 import { ReplayButton } from "@/components/task-runner/ReplayButton";
 import { useSpeechRecognition } from "@/lib/hooks/useSpeech";
+import { useScrollToTop } from "@/lib/hooks/useScrollToTop";
 
 type Mode = "translate" | "practice" | "saved";
 
@@ -337,6 +338,7 @@ function SpellGame({ words, onExit }: { words: VocabItem[]; onExit: () => void }
   const [typed, setTyped] = useState("");
   const [checked, setChecked] = useState<null | boolean>(null);
   const word = pool[idx % pool.length];
+  useScrollToTop(idx);
 
   function check() {
     setChecked(typed.trim().toLowerCase() === word.english.trim().toLowerCase());
@@ -387,6 +389,7 @@ function MeaningGame({ words, onExit }: { words: VocabItem[]; onExit: () => void
   const [idx, setIdx] = useState(0);
   const [answered, setAnswered] = useState<number | null>(null);
   const word = pool[idx % pool.length];
+  useScrollToTop(idx);
 
   const options = useMemo(() => {
     const distractors = shuffle(words.filter((w) => w.id !== word.id))
@@ -456,6 +459,7 @@ function SentenceGame({ words, onExit }: { words: VocabItem[]; onExit: () => voi
   const [busy, setBusy] = useState(false);
   const [feedback, setFeedback] = useState<{ good: boolean; feedback_ur: string; corrected_en: string } | null>(null);
   const word = pool[idx % pool.length];
+  useScrollToTop(idx);
 
   async function check() {
     setBusy(true);
