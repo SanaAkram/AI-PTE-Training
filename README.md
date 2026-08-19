@@ -62,6 +62,8 @@ Then, in the Vercel project dashboard → **Settings → Environment Variables**
 
 `npm run grow` (`scripts/daily-grow.ts`) asks OpenAI for a fresh batch of real-format questions across all 22 task types — spread across easy/medium/hard and a rotating pool of real PTE topic categories (education, technology & society, health, environment, government & policy, media, work, etc.) so items don't repeat — inserts them into `question_bank`, and extends `curriculum_days` further ahead.
 
+`npm run build-dictionary` (`scripts/build-dictionary.ts`) and `npm run build-grammar` (`scripts/build-grammar.ts`) fill the shared vocabulary and grammar-point banks the same way — both take `-- --count N` for a bigger one-off batch (N per category per difficulty band). These were built by generating original content rather than importing an existing word list: the best openly-findable English-Urdu datasets turned out to have no declared license *and* real quality problems even in their "gold" tier (checked directly — e.g. ناک mapped to "sored" instead of "nose") — not something to load into a learner's database unreviewed.
+
 - Daily default: `npm run grow` (~2 items/type/day, cheap, meant for the ongoing automation).
 - One-off bulk top-up: `npm run grow -- --count 9` (~200 items in one run, spread across all three levels).
 
