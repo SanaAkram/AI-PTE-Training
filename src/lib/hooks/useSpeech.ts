@@ -65,7 +65,8 @@ export function useSpeechRecognition() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     !!((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
 
-  const start = useCallback((onDone: (transcript: string) => void, onError?: () => void) => {
+  const start = useCallback(
+    (onDone: (transcript: string) => void, onError?: () => void, lang: string = "en-US") => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SR) {
@@ -73,7 +74,7 @@ export function useSpeechRecognition() {
       return;
     }
     const rec: AnySpeechRecognition = new SR();
-    rec.lang = "en-US";
+    rec.lang = lang;
     rec.interimResults = false;
     rec.maxAlternatives = 1;
     recRef.current = rec;

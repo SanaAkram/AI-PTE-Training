@@ -7,8 +7,9 @@ import { lookupWordAction, saveWordAction, deleteWordAction, checkSentenceAction
 import type { VocabLookupResult } from "@/lib/vocabLookup";
 import { Bilingual, Button, Card } from "@/components/ui";
 import { ReplayButton } from "@/components/task-runner/ReplayButton";
+import { useSpeechRecognition } from "@/lib/hooks/useSpeech";
 
-type Mode = "add" | "practice" | "saved";
+type Mode = "translate" | "practice" | "saved";
 
 /** The common shape the practice games actually need — both saved personal
  * words and shared dictionary words satisfy this, so practice can draw from
@@ -45,7 +46,7 @@ export default function MyWordsClient({
       <div className="flex gap-2" dir="ltr">
         {(
           [
-            ["add", "➕ شامل کریں", "Add"],
+            ["translate", "🌐 ترجمہ", "Translate"],
             ["practice", "🎯 مشق", "Practice"],
             ["saved", "📚 محفوظ شدہ", "Saved"],
           ] as [Mode, string, string][]
@@ -63,33 +64,48 @@ export default function MyWordsClient({
         ))}
       </div>
 
-      {mode === "add" && <AddWordPanel onSaved={() => setMode("saved")} />}
+      {mode === "translate" && <TranslatorPanel onSaved={() => setMode("saved")} />}
       {mode === "practice" && <PracticePanel words={practicePool} />}
       {mode === "saved" && <SavedList words={words} />}
     </div>
   );
 }
 
-// --------------------------------------------------------------- Add a word
+// ----------------------------------------------------------------- Translate
 
-function AddWordPanel({ onSaved }: { onSaved: () => void }) {
+function TranslatorPanel({ onSaved }: { onSaved: () => void }) {
   const router = useRouter();
   const [term, setTerm] = useState("");
   const [result, setResult] = useState<VocabLookupResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [micLang, setMicLang] = useState<"ur-PK" | "en-US">("ur-PK");
+  const { start, listening, supported: micSupported } = useSpeechRecognition();
 
-  async function lookup() {
+  async function lookup(text: string) {
     setError("");
+    setResult(null);
     setBusy(true);
     try {
-      const r = await lookupWordAction(term);
+      const r = await lookupWordAction(text);
       setResult(r);
     } catch {
       setError("کچھ غلط ہوا، دوبارہ کوشش کریں / Something went wrong, try again");
     } finally {
       setBusy(false);
     }
+  }
+
+  function recordAndTranslate() {
+    setError("");
+    start(
+      (transcript) => {
+        setTerm(transcript);
+        lookup(transcript); // record → transcribe → translate, no extra tap needed
+      },
+      () => setError("آواز نہیں پہچانی گئی، دوبارہ کوشش کریں / Could not hear that, try again"),
+      micLang
+    );
   }
 
   async function save() {
@@ -108,7 +124,41 @@ function AddWordPanel({ onSaved }: { onSaved: () => void }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <Bilingual ur="کوئی بھی لفظ یا جملہ لکھیں — اردو یا انگریزی میں" en="TYPE ANY WORD OR SENTENCE — URDU OR ENGLISH" />
+      <Bilingual ur="بولیں یا لکھیں — اردو یا انگریزی میں، فوری ترجمہ پائیں" en="SPEAK OR TYPE — URDU OR ENGLISH, INSTANT TRANSLATION" />
+
+      {micSupported && (
+        <div className="flex flex-col items-center gap-3 bg-surface-alt rounded-2xl p-5">
+          <div className="flex gap-2" dir="ltr">
+            {(["ur-PK", "en-US"] as const).map((l) => (
+              <button
+                key={l}
+                onClick={() => setMicLang(l)}
+                className={`text-xs font-bold px-3 py-1.5 rounded-full border ${
+                  micLang === l ? "bg-accent border-accent text-[color:var(--accent-ink)]" : "border-line text-ink-soft"
+                }`}
+              >
+                {l === "ur-PK" ? "اردو" : "English"}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={recordAndTranslate}
+            disabled={busy}
+            className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl border ${
+              listening ? "bg-rose animate-pulse border-rose" : "bg-accent border-accent"
+            }`}
+            aria-label="بولیں / Record"
+          >
+            🎤
+          </button>
+          <Bilingual
+            center
+            ur={listening ? "سن رہا ہوں..." : "بولنے کے لیے دبائیں"}
+            en={listening ? "LISTENING..." : "TAP TO SPEAK"}
+          />
+        </div>
+      )}
+
       <textarea
         value={term}
         onChange={(e) => setTerm(e.target.value)}
@@ -116,8 +166,8 @@ function AddWordPanel({ onSaved }: { onSaved: () => void }) {
         placeholder="مثلاً: مجھے دیر ہو گئی  یا  postpone"
         className="w-full rounded-2xl border border-line bg-surface p-4 text-base leading-relaxed resize-none text-right"
       />
-      <Button onClick={lookup} disabled={!term.trim() || busy}>
-        🔍 چیک کریں <span className="opacity-80 text-sm">(Check)</span>
+      <Button onClick={() => lookup(term)} disabled={!term.trim() || busy}>
+        🌐 ترجمہ کریں <span className="opacity-80 text-sm">(Translate)</span>
       </Button>
       {error && <p className="text-rose text-sm text-center font-bold">{error}</p>}
 
@@ -135,7 +185,7 @@ function AddWordPanel({ onSaved }: { onSaved: () => void }) {
             <div className="ur text-sm text-ink-soft mt-1">{result.example_ur}</div>
           </div>
           <Button variant="teal" onClick={save} disabled={busy}>
-            💾 محفوظ کریں <span className="opacity-80 text-sm">(Save)</span>
+            💾 اپنی فہرست میں محفوظ کریں <span className="opacity-80 text-sm">(Save to my list)</span>
           </Button>
         </Card>
       )}
@@ -151,7 +201,7 @@ function SavedList({ words }: { words: PersonalVocabRow[] }) {
     return (
       <Card>
         <p className="text-sm text-ink-soft text-center">
-          ابھی کوئی لفظ محفوظ نہیں — "شامل کریں" سے شروع کریں
+          ابھی کوئی لفظ محفوظ نہیں — "ترجمہ" سے شروع کریں
           <br />
           <span className="en text-xs">No words saved yet — start with &quot;Add&quot;.</span>
         </p>
