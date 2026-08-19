@@ -56,13 +56,16 @@ export function ScoreCard({ score, taskType }: { score: ScoreBreakdown; taskType
           ))}
           <p className="text-sm bg-surface-alt rounded-xl p-3 mt-2 en text-left">{score.feedback}</p>
           <p className="text-[0.65rem] text-ink-soft text-center mt-1">
-            practice estimate, not an official PTE score
+            <span className="ur">یہ مشق کا اندازہ ہے، سرکاری PTE سکور نہیں</span>
+            <br />
+            <span className="en">practice estimate, not an official PTE score</span>
           </p>
         </div>
       ) : (
         !score.correct && (
-          <p className="text-sm bg-surface-alt rounded-xl p-3 en">
-            Correct answer: <span className="font-bold">{score.correctAnswer}</span>
+          <p className="text-sm bg-surface-alt rounded-xl p-3 text-right">
+            <span className="ur">صحیح جواب: </span>
+            <span className="en font-bold">{score.correctAnswer}</span>
           </p>
         )
       )}

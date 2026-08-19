@@ -1,8 +1,9 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { SECTION_LABELS, TASK_TYPES } from "@/lib/taskTypes";
-import type { AttemptRow, Section, TaskType } from "@/lib/types";
+import type { AttemptRow, ProfileRow, Section, TaskType } from "@/lib/types";
 import { TopBar } from "@/components/TopBar";
 import { Bilingual, Card } from "@/components/ui";
 
@@ -23,13 +24,30 @@ function computeStreak(dates: string[]): number {
   return streak;
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ learner?: string }>;
+}) {
   const session = await getSession();
   if (!session) redirect("/login");
 
   const db = supabaseAdmin();
-  const { data: learner } = await db.from("profiles").select("*").eq("role", "learner").single();
-  if (!learner) redirect("/login");
+  const isObserver = session.role === "observer";
+
+  let learner: Pick<ProfileRow, "id" | "name">;
+  let learners: Pick<ProfileRow, "id" | "name">[] = [];
+
+  if (isObserver) {
+    const { data } = await db.from("profiles").select("id, name").eq("role", "learner").order("name");
+    learners = data ?? [];
+    if (learners.length === 0) redirect("/login");
+    const { learner: requestedId } = await searchParams;
+    learner = learners.find((l) => l.id === requestedId) ?? learners[0];
+  } else {
+    // A learner always views their own dashboard.
+    learner = { id: session.profileId, name: session.name };
+  }
 
   const { data: attempts } = await db
     .from("attempts")
@@ -71,8 +89,6 @@ export default async function DashboardPage() {
     .sort((a, b) => a.avg - b.avg)
     .slice(0, 4);
 
-  const isObserver = session.role === "observer";
-
   return (
     <>
       <TopBar session={session} />
@@ -81,6 +97,24 @@ export default async function DashboardPage() {
           ur={isObserver ? `${learner.name} کی پیش رفت` : "میری پیش رفت"}
           en={isObserver ? `${learner.name.toUpperCase()}'S PROGRESS` : "MY PROGRESS"}
         />
+
+        {isObserver && learners.length > 1 && (
+          <div className="flex gap-2 flex-wrap">
+            {learners.map((l) => (
+              <Link
+                key={l.id}
+                href={`/dashboard?learner=${l.id}`}
+                className={`text-sm font-display font-bold px-4 py-2 rounded-full border ${
+                  l.id === learner.id
+                    ? "bg-accent border-accent text-[color:var(--accent-ink)]"
+                    : "bg-surface-alt border-line text-ink-soft"
+                }`}
+              >
+                {l.name}
+              </Link>
+            ))}
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-3">
           <Card className="!p-4 text-center">

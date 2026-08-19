@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { getSession } from "@/lib/auth";
 import { TASK_TYPES } from "@/lib/taskTypes";
+import { getLearnerDifficulty, pickRandomQuestionId } from "@/lib/questionPicker";
 import type { TaskType } from "@/lib/types";
 
 export default async function SectionPracticePage({
@@ -11,15 +12,12 @@ export default async function SectionPracticePage({
   const { type } = await params;
   if (!(type in TASK_TYPES)) notFound();
 
-  const { data } = await supabaseAdmin()
-    .from("question_bank")
-    .select("id")
-    .eq("task_type", type as TaskType);
+  const session = await getSession();
+  if (!session) redirect("/login");
 
-  if (!data || data.length === 0) {
-    redirect(`/practice?empty=${type}`);
-  }
+  const level = session.role === "learner" ? await getLearnerDifficulty(session.profileId) : "medium";
+  const id = await pickRandomQuestionId(type as TaskType, level);
 
-  const pick = data[Math.floor(Math.random() * data.length)];
-  redirect(`/practice/task/${pick.id}?returnTo=${encodeURIComponent("/practice")}`);
+  if (!id) redirect(`/practice?empty=${type}`);
+  redirect(`/practice/task/${id}?returnTo=${encodeURIComponent("/practice")}`);
 }

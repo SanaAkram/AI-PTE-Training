@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "tsx scripts/seed.ts",
-    "grow": "tsx scripts/daily-grow.ts"
+    "grow": "tsx scripts/daily-grow.ts",
+    "add-profile": "tsx scripts/add-profile.ts",
+    "set-level": "tsx scripts/set-level.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.3",

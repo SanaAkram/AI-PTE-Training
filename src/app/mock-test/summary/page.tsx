@@ -75,11 +75,20 @@ export default async function MockTestSummaryPage({
           >
             <div className="w-28 h-28 rounded-full bg-surface flex flex-col items-center justify-center">
               <span className="text-3xl font-display font-extrabold tabular-nums">{overall}</span>
-              <span className="text-[0.65rem] text-ink-soft font-bold">/ 100 practice score</span>
+              <span className="text-[0.65rem] text-ink-soft font-bold text-center leading-tight">
+                <span className="ur block">اندازہ / 100</span>
+                <span className="en">practice score</span>
+              </span>
             </div>
           </div>
           <p className="text-[0.65rem] text-ink-soft mt-3">
-            {overallCount}/{questionIds.length} tasks completed — practice estimate, not an official PTE score
+            <span className="ur">
+              {overallCount}/{questionIds.length} کام مکمل — یہ مشق کا اندازہ ہے، سرکاری سکور نہیں
+            </span>
+            <br />
+            <span className="en">
+              {overallCount}/{questionIds.length} tasks completed — practice estimate, not an official PTE score
+            </span>
           </p>
         </Card>
 

@@ -11,19 +11,17 @@ export interface LoginProfile {
 }
 
 const PROFILE_ICON: Record<string, string> = { learner: "🧑‍🎓", observer: "👀" };
+// Passcodes aren't a fixed length (household members can have different
+// lengths — e.g. 4 digits vs 5), so entry always confirms with ✓ rather
+// than auto-submitting at a guessed length.
+const MIN_PASSCODE_LENGTH = 4;
+const MAX_PASSCODE_LENGTH = 8;
 
 export default function LoginClient({ profiles }: { profiles: LoginProfile[] }) {
   const [selected, setSelected] = useState<LoginProfile | null>(null);
   const [pin, setPin] = useState("");
   const [state, formAction, isPending] = useActionState<LoginState, FormData>(loginAction, {});
   const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    if (pin.length === 4 && selected && !isPending) {
-      formRef.current?.requestSubmit();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pin]);
 
   useEffect(() => {
     if (state.error) setPin("");
@@ -64,11 +62,11 @@ export default function LoginClient({ profiles }: { profiles: LoginProfile[] }) 
     <main className="mx-auto w-full max-w-md flex-1 flex flex-col justify-center gap-6 px-5 py-10">
       <div className="text-center">
         <div className="text-4xl mb-2">{PROFILE_ICON[selected.role]}</div>
-        <Bilingual center ur={`${selected.name} — اپنا PIN لگائیں`} en="ENTER YOUR PIN" />
+        <Bilingual center ur={`${selected.name} — اپنا پاس کوڈ لگائیں`} en="ENTER YOUR PASSCODE" />
       </div>
 
-      <div className="flex justify-center gap-4" dir="ltr">
-        {[0, 1, 2, 3].map((i) => (
+      <div className="flex justify-center gap-3 flex-wrap" dir="ltr">
+        {Array.from({ length: Math.max(pin.length, MIN_PASSCODE_LENGTH) }).map((_, i) => (
           <span
             key={i}
             className={`w-4 h-4 rounded-full border-2 ${
@@ -100,7 +98,7 @@ export default function LoginClient({ profiles }: { profiles: LoginProfile[] }) 
                 key={k}
                 type="button"
                 onClick={() => formRef.current?.requestSubmit()}
-                disabled={pin.length !== 4 || isPending}
+                disabled={pin.length < MIN_PASSCODE_LENGTH || isPending}
                 className="rounded-2xl bg-teal text-white py-5 text-xl font-display font-bold active:scale-95 disabled:opacity-30"
               >
                 ✓
@@ -111,7 +109,7 @@ export default function LoginClient({ profiles }: { profiles: LoginProfile[] }) 
             <button
               key={k}
               type="button"
-              onClick={() => setPin((p) => (p.length < 4 ? p + k : p))}
+              onClick={() => setPin((p) => (p.length < MAX_PASSCODE_LENGTH ? p + k : p))}
               className="rounded-2xl bg-surface border border-line py-5 text-xl font-display font-bold active:scale-95"
             >
               {k}

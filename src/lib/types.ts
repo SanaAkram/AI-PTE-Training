@@ -207,11 +207,25 @@ export interface QuestionRow {
   created_at: string;
 }
 
+export type DifficultyLevel = "easy" | "medium" | "hard";
+
 export interface ProfileRow {
   id: string;
   name: string;
   role: "learner" | "observer";
   pin_hash: string;
+  preferred_difficulty: DifficultyLevel;
+  created_at: string;
+}
+
+export interface PersonalVocabRow {
+  id: string;
+  profile_id: string;
+  term: string;
+  english: string;
+  meaning_ur: string;
+  example_en: string;
+  example_ur: string;
   created_at: string;
 }
 
