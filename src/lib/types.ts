@@ -252,8 +252,7 @@ export interface PersonalVocabRow {
   term: string;
   english: string;
   meaning_ur: string;
-  example_en: string;
-  example_ur: string;
+  examples: { en: string; ur: string }[];
   created_at: string;
 }
 

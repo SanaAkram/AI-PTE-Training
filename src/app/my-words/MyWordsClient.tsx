@@ -180,9 +180,16 @@ function TranslatorPanel({ onSaved }: { onSaved: () => void }) {
               <div className="ur text-accent-deep">{result.meaning_ur}</div>
             </div>
           </div>
-          <div className="bg-surface-alt rounded-xl p-3">
-            <div className="en text-sm">{result.example_en}</div>
-            <div className="ur text-sm text-ink-soft mt-1">{result.example_ur}</div>
+          <div className="flex flex-col gap-2">
+            {result.examples.map((ex, i) => (
+              <div key={i} className="bg-surface-alt rounded-xl p-3 flex items-center gap-2">
+                <ReplayButton text={ex.en} size="sm" />
+                <div className="flex-1">
+                  <div className="en text-sm">{ex.en}</div>
+                  <div className="ur text-sm text-ink-soft mt-1">{ex.ur}</div>
+                </div>
+              </div>
+            ))}
           </div>
           <Button variant="teal" onClick={save} disabled={busy}>
             💾 اپنی فہرست میں محفوظ کریں <span className="opacity-80 text-sm">(Save to my list)</span>
@@ -211,26 +218,50 @@ function SavedList({ words }: { words: PersonalVocabRow[] }) {
   return (
     <div className="flex flex-col gap-2.5">
       {words.map((w) => (
-        <Card key={w.id} className="!p-4 flex items-start gap-3">
-          <ReplayButton text={w.english} size="sm" />
-          <div className="flex-1 text-right">
-            <div className="en font-display font-bold">{w.english}</div>
-            <div className="ur text-accent-deep text-sm">{w.meaning_ur}</div>
-            <div className="en text-xs text-ink-soft mt-1">{w.example_en}</div>
-          </div>
-          <button
+        <SavedWordCard key={w.id} word={w} onDeleted={() => router.refresh()} />
+      ))}
+    </div>
+  );
+}
+
+function SavedWordCard({ word: w, onDeleted }: { word: PersonalVocabRow; onDeleted: () => void }) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <Card className="!p-4 flex flex-col gap-2">
+      <div className="flex items-start gap-3">
+        <ReplayButton text={w.english} size="sm" />
+        <button className="flex-1 text-right" onClick={() => setExpanded((e) => !e)}>
+          <div className="en font-display font-bold">{w.english}</div>
+          <div className="ur text-accent-deep text-sm">{w.meaning_ur}</div>
+          {!expanded && w.examples.length > 0 && (
+            <div className="en text-xs text-ink-soft mt-1">{w.examples[0].en}</div>
+          )}
+        </button>
+        <button
             onClick={async () => {
               await deleteWordAction(w.id);
-              router.refresh();
+              onDeleted();
             }}
             className="text-ink-soft text-lg shrink-0"
             aria-label="Delete"
           >
             🗑️
           </button>
-        </Card>
-      ))}
-    </div>
+      </div>
+      {expanded && (
+        <div className="flex flex-col gap-2">
+          {w.examples.map((ex, i) => (
+            <div key={i} className="bg-surface-alt rounded-xl p-2.5 flex items-center gap-2">
+              <ReplayButton text={ex.en} size="sm" />
+              <div className="flex-1">
+                <div className="en text-sm">{ex.en}</div>
+                <div className="ur text-xs text-ink-soft mt-0.5">{ex.ur}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </Card>
   );
 }
 

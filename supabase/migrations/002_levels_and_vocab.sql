@@ -16,11 +16,26 @@ create table if not exists personal_vocab (
   term text not null,        -- exactly what they typed (Urdu, English, or mixed)
   english text not null,     -- the natural English word/phrase/sentence (translated if needed)
   meaning_ur text not null,  -- Urdu explanation of meaning/usage
-  example_en text not null,
-  example_ur text not null,
+  examples jsonb not null default '[]', -- [{en, ur}, ...] — several usage examples, not just one
   created_at timestamptz not null default now()
 );
 create index if not exists personal_vocab_profile_idx on personal_vocab (profile_id, created_at desc);
+
+-- personal_vocab may already exist from an earlier run of this file, in which
+-- case the CREATE TABLE above was a no-op and never added the newer
+-- `examples` column — add it explicitly, then fold any older single
+-- example_en/example_ur columns into it and drop them.
+alter table personal_vocab add column if not exists examples jsonb not null default '[]';
+do $$
+begin
+  if exists (select 1 from information_schema.columns where table_name = 'personal_vocab' and column_name = 'example_en') then
+    update personal_vocab
+      set examples = jsonb_build_array(jsonb_build_object('en', example_en, 'ur', example_ur))
+      where examples = '[]'::jsonb and example_en is not null;
+    alter table personal_vocab drop column example_en;
+    alter table personal_vocab drop column example_ur;
+  end if;
+end $$;
 
 -- Shared "Dictionary" — a curated, pre-loaded word bank (not tied to any one
 -- profile) so vocabulary/spelling practice has ready-made content from day

@@ -22,8 +22,7 @@ export async function saveWordAction(term: string, result: VocabLookupResult) {
     term,
     english: result.english,
     meaning_ur: result.meaning_ur,
-    example_en: result.example_en,
-    example_ur: result.example_ur,
+    examples: result.examples,
   });
   if (error) throw error;
   revalidatePath("/my-words");
