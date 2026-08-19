@@ -4,7 +4,8 @@ A real PTE (Pearson Test of English) training platform built for the family —
 all 22 real PTE Academic task types with authentic timers and interactions, a
 Postgres question bank that grows on its own, AI-graded Speaking/Writing
 feedback, Easy/Medium/Hard levels per person, replayable/slowed-down audio, a
-personal vocabulary module, a daily study plan, a full mock test, and a
+voice-input Urdu/English translator with a personal word list, a grammar &
+sentence-building module, a daily study plan, a full mock test, and a
 progress dashboard observers can check from their own phone.
 
 Stack: **Next.js (App Router, TypeScript) · Supabase (Postgres) · OpenAI**,
@@ -15,7 +16,9 @@ deployed on **Vercel**.
 1. Go to [supabase.com](https://supabase.com) → New project (free tier is enough to start).
 2. Once it's created: **Project Settings → API** — copy the **Project URL** and the **Secret key** (older projects may instead call this **service_role** — either works, see `.env.example`). Never the **Publishable**/`anon` key — the secret key is server-only and never sent to the browser.
 3. **SQL Editor → New query** — paste the contents of [supabase/schema.sql](supabase/schema.sql) and run it. This creates the four core tables (`profiles`, `question_bank`, `curriculum_days`, `attempts`).
-4. Also run [supabase/migrations/002_levels_and_vocab.sql](supabase/migrations/002_levels_and_vocab.sql) the same way — adds per-person difficulty levels and the "My Words" personal vocabulary table.
+4. Also run [supabase/migrations/002_levels_and_vocab.sql](supabase/migrations/002_levels_and_vocab.sql) the same way — adds per-person difficulty levels, the "My Words" personal vocabulary table, the shared `dictionary`, and `grammar_points`.
+
+If this file gets edited again later (new columns, new tables), re-running it is always safe — every statement is idempotent (`if not exists` / `if exists` guarded). One gotcha to know about if editing it yourself: `create table if not exists` is a silent no-op once the table already exists, so a *new column* on an existing table needs its own explicit `alter table ... add column if not exists` line, not just an addition to the original `create table`.
 
 ## 2. Get an OpenAI key
 
@@ -49,7 +52,18 @@ npm run add-profile -- --name Haneef --role learner --pin 12348 --level easy
 npm run set-level -- --name Haneef --level easy
 ```
 
+To clear recorded progress so exercises show as unsolved again (e.g. after testing, or to let someone redo everything):
+
+```
+npm run reset-attempts                    # everyone
+npm run reset-attempts -- --name Mubeen   # just one person
+```
+
+This only clears the `attempts` table — questions, dictionary, grammar content, and the curriculum plan are untouched. Note it also zeroes the dashboard stats (streak, scores, attempt count), since those are computed from the same records.
+
 ## 6. Deploy to Vercel
+
+Live at **https://ai-pte-training.vercel.app**.
 
 ```
 vercel login
@@ -76,10 +90,12 @@ Run it manually any time, or set it up as a genuine daily automation using Claud
 - `src/lib/difficulty.ts` — maps the 3 learner-facing levels (easy/medium/hard) onto the 1-5 difficulty scale stored on question rows; `src/lib/questionPicker.ts` is where that filtering actually happens (with a fallback to any difficulty so a thin bank never dead-ends).
 - `src/components/task-runner/` — the interaction engine: one `TaskRunner` that reads the registry and delegates to the right renderer (Speaking, Writing, Reading MCQ, Reorder, Fill-in-Blanks ×2, and the Listening family). `AudioGate` and `ReplayButton` are the shared "play once, then replay anytime at your chosen speed" system used everywhere audio plays; the global speed toggle lives in `src/lib/hooks/useAudioRate.tsx`.
 - `src/lib/scoring/` — `objective.ts` (instant exact-match scoring for Reading/Listening) and `ai.ts` (OpenAI rubric grading for Speaking/Writing).
-- `src/app/my-words/` — the personal vocabulary module: type any word/sentence (Urdu or English), get an AI explanation + example, save it, then practice it three ways (listen & spell, recognize meaning, write your own sentence with AI feedback).
+- `src/app/my-words/` — a Translator (voice or typed input, Urdu or English, instant translation with 5 varied example sentences each with its own speaker button) plus three practice games (listen & spell, recognize meaning, write your own sentence with AI feedback) drawing on both your saved words and the shared `dictionary` bank.
+- `src/app/grammar/` — grammar & sentence-structure points (explanation, pattern, examples, one fill-in-the-blank check with Urdu shown on both the sentence and every option) from the `grammar_points` table.
+- `src/lib/hooks/useScrollToTop.ts` — used anywhere "next question" only updates React state instead of navigating (Grammar, My Words games) so the page still scrolls back up like a real navigation would.
 - `src/data/seedQuestions.ts` + `scripts/seed.ts` — the starter bank and the script that loads it plus builds the first curriculum days.
-- `scripts/daily-grow.ts` — the content-growth script described above.
-- `scripts/add-profile.ts` / `scripts/set-level.ts` — household member management.
+- `scripts/daily-grow.ts` / `scripts/build-dictionary.ts` / `scripts/build-grammar.ts` — the content-growth scripts described above, one per content type.
+- `scripts/add-profile.ts` / `scripts/set-level.ts` / `scripts/reset-attempts.ts` — household member and progress management.
 
 ## Notes on honesty
 
